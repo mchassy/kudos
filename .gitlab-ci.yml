@@ -24,6 +24,7 @@ lint_code:
     - sudo chmod -R 775 /builds/mapu/kudos
     - export PATH="/home/ubuntu/.local/bin:$PATH"
     - echo $PATH
+    - deactivate
     - python -m venv env
     - source ./env/bin/activate
     - which python
