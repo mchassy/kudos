@@ -19,15 +19,10 @@ lint_code:
     # - docker
   script:
     - pwd
+    - ls -al
     - cd /home/ubuntu
     - pwd
-    - source /home/ubuntu/.bashrc
-    - which pip
-    - pip -V
-    - which python
-    - python -V
-    - pip install -r ./dev/requirements.txt
-    - which pylint
+    - ls -al
     - pylint --version
     - pylint ./kudos_oss
 
