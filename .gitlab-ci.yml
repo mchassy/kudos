@@ -19,10 +19,10 @@ lint_code:
     # - docker
   script:
     - pwd
+    - chown -R ubuntu:ubuntu /builds/mapu/kudos
+    - chmod -R 775 /builds/mapu/kudos
     - ls -al
-    - cd /home/ubuntu
-    - pwd
-    - ls -al
+    - source /home/ubuntu/.bashrc
     - pylint --version
     - pylint ./kudos_oss
 
