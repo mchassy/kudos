@@ -19,13 +19,15 @@ lint_code:
     # - docker
   script:
     - cd /prj 
-    - python -m venv /prj/env
-    - source /prj/env/bin/activate
+    - ls -al
+    - source ./env/bin/activate
     - which pip
     - pip -V
     - which python 
     - python -V
-    - pip install -r /prj/dev/requirements.txt
+    - pip install -r ./dev/requirements.txt
+    - which pylint
+    - pylint --version
     - pylint /prj/kudos/
 
 lint_config:
