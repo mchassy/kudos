@@ -18,6 +18,7 @@ lint_code:
   # tags:
     # - docker
   script:
+    - ls -al
     - cd /prj/kudos
     - ls -al
     - source ./env/bin/activate
