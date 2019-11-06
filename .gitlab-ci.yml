@@ -19,12 +19,9 @@ lint_code:
     # - docker
   script:
     - pwd
-    - ls -al
-    - ls -al ./env
-    - ls -al ./config
-    - ls -al ./dev
-    - ls -al ./kudos_oss
-    - source ./env/bin/activate
+    - cd /home/ubuntu
+    - pwd
+    - source /home/ubuntu/.bashrc
     - which pip
     - pip -V
     - which python
