@@ -19,8 +19,10 @@ lint_code:
     # - docker
   script:
     - ls -al
-    - cd /prj/kudos
-    - ls -al
+    - ls -al ./env
+    - ls -al ./config
+    - ls -al ./dev
+    - ls -al ./kudos_oss
     - source ./env/bin/activate
     - which pip
     - pip -V
@@ -29,7 +31,7 @@ lint_code:
     - pip install -r ./dev/requirements.txt
     - which pylint
     - pylint --version
-    - pylint /prj/kudos/k
+    - pylint ./kudos_oss 
 
 lint_config:
   stage: lint_config
