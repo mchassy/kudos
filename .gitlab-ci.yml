@@ -25,7 +25,7 @@ lint_code:
     - export PATH="/home/ubuntu/.local/bin:$PATH"
     - echo $PATH
     - pip list installed
-    - pip install -r ./dev/requirements
+    - pip install -r ./dev/requirements.txt
     - pip list installed
     - pylint ./kudos_oss/
 
