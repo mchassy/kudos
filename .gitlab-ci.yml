@@ -24,13 +24,10 @@ lint_code:
     - sudo chmod -R 775 /builds/mapu/kudos
     - export PATH="/home/ubuntu/.local/bin:$PATH"
     - echo $PATH
-    - which python
-    - which pip
     - pip list installed
     - python -m venv env
     - source ./env/bin/activate
-    - which python
-    - which pip
+    - ls -al /builds/mapu/kudos/env/bin/pip
     - pip list installed
     - pylint ./kudos_oss/
 
