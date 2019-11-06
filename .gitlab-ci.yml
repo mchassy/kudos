@@ -18,6 +18,12 @@ lint_code:
   # tags:
     # - docker
   script:
+    - python -m venv env
+    - source /prj/env/bin/activate
+    - which pip
+    - pip -V
+    - which python 
+    - python -V
     - pip install -r dev/requirements.txt
     - pylint /prj/kudos/
 
