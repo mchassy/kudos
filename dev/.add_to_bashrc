@@ -1,0 +1,25 @@
+export FLASK_APP=/prj/kudos/kudos_oss/app/http/api/endpoints.py
+export APP_CONFIG_FILE=/prj/kudos/config/development.py
+export FLASK_ENV=development
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+if [ -d "/prj" ]
+then
+    cd /prj
+    if [ -d "/prj/env/bin" ]
+    then
+        source /prj/env/bin/activate
+    else
+        python -m venv env && source /prj/env/bin/activate
+    fi
+    echo "Running in local containerised dev environment"
+else
+   cd /builds/mapu/kudos
+   if [ -d "/builds/mapu/kudos/env/bin" ]
+   then
+       source /builds/mapu/kudos/env/bin/activate
+   else
+       python -m venv env && source /builds/mapu/kudos/env/bin/activate
+   fi
+   echo "Running on Gitlab runner container"
+fi
