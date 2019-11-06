@@ -22,11 +22,15 @@ lint_code:
     - whoami
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
-    - ls -al
+    - echo "Before Activation"
+    - ls -al ./env
     - python -m venv env
     - source ./env/bin/activate
-    - pylint --version
-    - pylint ./kudos_oss
+    - echo "After activation"
+    - ls -al ./env
+    - which pip
+    - which python
+    - sudo find / -name pylint
 
 lint_config:
   stage: lint_config
