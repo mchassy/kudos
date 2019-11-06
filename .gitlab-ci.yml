@@ -22,12 +22,14 @@ lint_code:
     - whoami
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
-    - cd /home/ubuntu
-    - which pip
-    - which python
     - export PATH="/home/ubuntu/.local/bin:$PATH"
     - echo $PATH
-    - pylint --version
+    - python -m venv env
+    - source ./env/bin/activate
+    - which python
+    - which pip
+    - pip install -r ./dev/requirements.txt
+    - pylint ./kudos_oss/
 
 lint_config:
   stage: lint_config
