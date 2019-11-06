@@ -18,6 +18,7 @@ lint_code:
   # tags:
     # - docker
   script:
+    - pwd
     - ls -al
     - ls -al ./env
     - ls -al ./config
@@ -31,7 +32,7 @@ lint_code:
     - pip install -r ./dev/requirements.txt
     - which pylint
     - pylint --version
-    - pylint ./kudos_oss 
+    - pylint ./kudos_oss
 
 lint_config:
   stage: lint_config
