@@ -18,17 +18,17 @@ lint_code:
   # tags:
     # - docker
   script:
-    - cd /prj 
-    - ls -al
+    - cd /prj/kudos
+    - ll
     - source ./env/bin/activate
     - which pip
     - pip -V
-    - which python 
+    - which python
     - python -V
     - pip install -r ./dev/requirements.txt
     - which pylint
     - pylint --version
-    - pylint /prj/kudos/
+    - pylint /prj/kudos/k
 
 lint_config:
   stage: lint_config
