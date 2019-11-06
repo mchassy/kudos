@@ -1,0 +1,8 @@
+.DS_Store
+__pycache__
+env/share
+env/bin
+env/include
+env/lib
+env/lib64
+env/share

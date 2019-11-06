@@ -1,0 +1,59 @@
+default:
+  before_script:
+    - echo "Before Script of Gitlab Runner"
+  image:
+    name: $DOCKER_URI/kudos-env:latest
+    # name: mchassy/gl-validation:latest
+variables:
+  DOCKER_DRIVER: overlay
+
+stages:
+  - lint_code
+  - lint_config
+  - build_image
+  - test_image
+
+lint_code:
+  stage: lint_code
+  # tags:
+    # - docker
+  script:
+    - pip install -r dev/requirements.txt
+    - pylint /prj/kudos/
+
+lint_config:
+  stage: lint_config
+  # tags:
+    # - docker
+  script:
+    # - ansible-lint ./config/config.yml
+    - echo "No build config yet"
+  dependencies:
+    - lint_code
+build_image:
+  stage: build_image
+  # tags:
+    # - docker
+  script:
+  # - ansible --version
+  # - buildah --version
+  # - aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
+  # - ansible-bender build ./config/config.yml
+  # - ansible-bender list-builds
+  # - ansible-bender push $DOCKER_URI/ab-webserver:latest 1
+  - echo "No build config yet"
+  dependencies:
+    - lint_config
+test_image:
+  stage: test_image
+  # image: $DOCKER_URI/gl-docker:latest
+  # services:
+  # - $DOCKER_URI/ab-webserver
+  # tags:
+  #   - docker
+  script:
+    # - echo "Testing web server"
+    # - curl -s $DOCKER_URI-ab-webserver:8080
+    - echo "No build config yet"
+  dependencies:
+    - build_image
