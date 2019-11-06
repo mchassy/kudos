@@ -19,7 +19,7 @@ lint_code:
     # - docker
   script:
     - cd /prj/kudos
-    - ll
+    - ls -al
     - source ./env/bin/activate
     - which pip
     - pip -V
