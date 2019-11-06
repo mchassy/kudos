@@ -23,9 +23,9 @@ lint_code:
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
     - cd /home/ubuntu
-    - source ./.bashrc
     - which pip
     - which python
+    - export PATH="/home/ubuntu/.local/bin:$PATH"
     - echo $PATH
     - sudo find / -name pylint
 
