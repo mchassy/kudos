@@ -19,6 +19,7 @@ lint_code:
     # - docker
   script:
     - python -m venv env
+    - pwd
     - source /prj/env/bin/activate
     - which pip
     - pip -V
