@@ -27,7 +27,7 @@ lint_code:
     - which python
     - export PATH="/home/ubuntu/.local/bin:$PATH"
     - echo $PATH
-    - sudo find / -name pylint
+    - pylint --version
 
 lint_config:
   stage: lint_config
