@@ -26,6 +26,7 @@ lint_code:
     - source ./.bashrc
     - which pip
     - which python
+    - echo $PATH
     - sudo find / -name pylint
 
 lint_config:
