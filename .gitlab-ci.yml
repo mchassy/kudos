@@ -38,16 +38,13 @@ lint_config:
     - lint_code
 build_image:
   stage: build_image
-  # tags:
-    # - docker
   script:
-  # - ansible --version
-  # - buildah --version
-  # - aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
-  # - ansible-bender build ./config/config.yml
-  # - ansible-bender list-builds
-  # - ansible-bender push $DOCKER_URI/ab-webserver:latest 1
-  - echo "No build config yet"
+  - ansible --version
+  - buildah --version
+  - aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
+  - ansible-bender build ./config/config.yml
+  - ansible-bender list-builds
+  - ansible-bender push $DOCKER_URI/ab-webserver:latest 1
   dependencies:
     - lint_config
 test_image:
