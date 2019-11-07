@@ -7,10 +7,14 @@ export PATH="/home/ubuntu/.local/bin:$PATH"
 if [ -d "/prj" ]
 then
     cd /prj && pwd
+    echo "#######################################################"
     echo "Running in local containerised dev environment"
+    echo "#######################################################"
 else
     cd /builds/mapu/kudos && pwd
+    echo "#######################################################"
     echo "Running on Gitlab runner container"
+    echo "#######################################################"
 fi
 if [ -d "./env/bin" ]
 then

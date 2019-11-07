@@ -1,5 +1,5 @@
-#docker rmi $DOCKER_URI/kudos-env:latest
-#docker rmi kudos-env:latest
+docker rmi $DOCKER_URI/kudos-env:latest
+docker rmi kudos-env:latest
 docker build -t kudos-env:latest .
 if [ $? -eq 0 ]
 then

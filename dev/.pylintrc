@@ -2,4 +2,4 @@
 init-hook=
     try: import pylint_venv
     except ImportError: pass
-    else: pylint_venv.inithook('/prj/env')
+    else: pylint_venv.inithook('$PROJECT_ROOT')
