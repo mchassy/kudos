@@ -19,6 +19,17 @@ fi
 if [ -d "./env/bin" ]
 then
     source ./env/bin/activate
+    echo "#######################################################"
+    echo "Activating virtual environment"
+    echo "#######################################################"
 else
-    python -m venv env && source ./env/bin/activate
+    echo "#######################################################"
+    echo "Creating virtual environment"
+    echo "#######################################################"
+    python -m venv env 
+    echo "#######################################################"
+    echo "Activating virtual environment"
+    echo "#######################################################"
+    source ./env/bin/activate
+    pip install -r ./dev/requirements.txt
 fi

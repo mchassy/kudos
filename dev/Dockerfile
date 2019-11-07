@@ -9,7 +9,6 @@ RUN apt-get -y autoremove
 RUN apt-get clean
 RUN useradd -m -d /home/ubuntu -b /home/ubuntu -U -G sudo ubuntu && echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 RUN mkdir -p /prj/kudos
-COPY .pylintrc /home/ubuntu
 COPY .add_to_bashrc /home/ubuntu
 RUN cat /home/ubuntu/.add_to_bashrc >> /home/ubuntu/.bashrc && rm /home/ubuntu/.add_to_bashrc
 RUN chown -R ubuntu:ubuntu /prj && chmod -R 775 /prj
