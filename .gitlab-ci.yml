@@ -39,6 +39,11 @@ lint_config:
 build_image:
   stage: build_image
   script:
+  - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
+  - sudo chmod -R 775 /builds/mapu/kudos
+  - export PATH="/home/ubuntu/.local/bin:$PATH"
+  - ls -al /builds/mapu/kudos/env
+  - /home/ubuntu/.bashrc
   - ansible --version
   - buildah --version
   - aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
