@@ -24,7 +24,7 @@ lint_code:
     - sudo chmod -R 775 /builds/mapu/kudos
     - export PATH="/home/ubuntu/.local/bin:$PATH"
     - echo $PATH
-    - pylint --init-hook="import pylint_venv; pylint_venv.inithook('$PROJECT_ROOT/env')" ./kudos
+    - pylint --init-hook="import pylint_venv; pylint_venv.inithook('$PROJECT_ROOT/env')" ./kudos_oss
 
 lint_config:
   stage: lint_config
