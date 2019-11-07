@@ -5,23 +5,25 @@ export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 export PATH="/home/ubuntu/.local/bin:$PATH"
 echo "#######################################################"
-if [[ -z "${CI_JOB_STAGE}" ]]
+if [[ -z "$CI_JOB_STAGE" ]]
 then
     CI_JOB_STAGE="locally"
-    cd /prj && pwd
+    cd /prj
     echo "Running $CI_JOB_STAGE"
 else
-    cd /builds/mapu/kudos && pwd
+    cd /builds/mapu/kudos
     echo "Running $CI_JOB_STAGE on Gitlab runner"
 fi
+echo "from $PWD"
 echo "#######################################################"
-if [[ -d "./env/bin" && $CI_JOB_STAGE -eq "locally" ]]
+if [[ -d "./env/bin" ]]
 then
     echo "#######################################################"
     echo "Activating virtual environment"
     echo "#######################################################"
     source ./env/bin/activate
-elif [[ $CI_JOB_STAGE -eq "locally" || $CI_JOB_STAGE -eq "lint_code" ]]
+fi
+if [[ $CI_JOB_STAGE == "locally" || $CI_JOB_STAGE == "lint_code" ]] && [[ ! -d "./env/bin" ]]
 then
     echo "#######################################################"
     echo "Creating virtual environment"
@@ -32,14 +34,11 @@ then
     echo "#######################################################"
     source ./env/bin/activate
     pip install -r ./dev/requirements.txt
-elif [[ $CI_JOB_STAGE -eq "build_image" ]]
+fi
+if [[ $CI_JOB_STAGE == "build_image" ]]
 then
   echo "#######################################################"
   echo "Installing awscli"
   echo "#######################################################"
   sudo apt-get install awscli
-else
-  echo "#######################################################"
-  echo "Nothing to do"
-  echo "#######################################################"
 fi
