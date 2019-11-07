@@ -29,6 +29,7 @@ lint_config:
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
     - /home/ubuntu/.bashrc
+    - export PATH="/home/ubuntu/.local/bin:$PATH"
     - ansible-lint ./build/config.yml
   dependencies:
     - lint_code
