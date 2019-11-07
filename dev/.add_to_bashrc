@@ -5,18 +5,18 @@ export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 export PATH="/home/ubuntu/.local/bin:$PATH"
 echo "#######################################################"
-if [[ -z "$CI_JOB_STAGE" ]]
+if [[ $CI_JOB_STAGE != "" ]]
 then
+    cd /builds/mapu/kudos
+    echo "Running $CI_JOB_STAGE on Gitlab runner"
+else
     CI_JOB_STAGE="locally"
     cd /prj
     echo "Running $CI_JOB_STAGE"
-else
-    cd /builds/mapu/kudos
-    echo "Running $CI_JOB_STAGE on Gitlab runner"
 fi
 echo "from $PWD"
 echo "#######################################################"
-if [[ -d "./env/bin" ]]
+if [[ -d "./env/bin"  && $CI_JOB_STAGE == "locally" ]]
 then
     echo "#######################################################"
     echo "Activating virtual environment"
