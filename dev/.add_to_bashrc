@@ -23,17 +23,20 @@ then
     echo "#######################################################"
     source ./env/bin/activate
 fi
-if [[ $CI_JOB_STAGE == "locally" || $CI_JOB_STAGE == "lint_code" ]] && [[ ! -d "./env/bin" ]]
+if [[ $CI_JOB_STAGE == "locally" || $CI_JOB_STAGE == "lint_code" ]]
 then
-    echo "#######################################################"
-    echo "Creating virtual environment"
-    echo "#######################################################"
-    python -m venv env
-    echo "#######################################################"
-    echo "Activating virtual environment"
-    echo "#######################################################"
-    source ./env/bin/activate
-    pip install -r ./dev/requirements.txt
+    if [[ ! -d "./env/bin" ]]
+    then
+        echo "#######################################################"
+        echo "Creating virtual environment"
+        echo "#######################################################"
+        python -m venv env
+        echo "#######################################################"
+        echo "Activating virtual environment"
+        echo "#######################################################"
+        source ./env/bin/activate
+        pip install -r ./dev/requirements.txt
+    fi
 fi
 if [[ $CI_JOB_STAGE == "build_image" ]]
 then
