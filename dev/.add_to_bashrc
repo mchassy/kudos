@@ -4,25 +4,25 @@ export FLASK_ENV=development
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 export PATH="/home/ubuntu/.local/bin:$PATH"
-if [ ! -d "/builds/mapu/" ]
+echo "#######################################################"
+if [[ -z "${CI_JOB_STAGE}" ]]
 then
+    CI_JOB_STAGE="locally"
     cd /prj && pwd
-    echo "#######################################################"
-    echo "Running in local containerised dev environment"
-    echo "#######################################################"
+    echo "Running $CI_JOB_STAGE"
 else
     cd /builds/mapu/kudos && pwd
-    echo "#######################################################"
-    echo "Running on Gitlab runner container"
-    echo "#######################################################"
+    echo "Running $CI_JOB_STAGE on Gitlab runner"
 fi
-if [ -d "./env/bin" ]
+echo "#######################################################"
+if [[ -d "./env/bin" && $CI_JOB_STAGE -eq "locally" ]]
 then
-    source ./env/bin/activate
     echo "#######################################################"
     echo "Activating virtual environment"
     echo "#######################################################"
-else
+    source ./env/bin/activate
+elif [[ $CI_JOB_STAGE -eq "locally" || $CI_JOB_STAGE -eq "lint_code" ]]
+then
     echo "#######################################################"
     echo "Creating virtual environment"
     echo "#######################################################"
@@ -32,4 +32,14 @@ else
     echo "#######################################################"
     source ./env/bin/activate
     pip install -r ./dev/requirements.txt
+elif [[ $CI_JOB_STAGE -eq "build_image" ]]
+then
+  echo "#######################################################"
+  echo "Installing awscli"
+  echo "#######################################################"
+  sudo apt-get install awscli
+else
+  echo "#######################################################"
+  echo "Nothing to do"
+  echo "#######################################################"
 fi

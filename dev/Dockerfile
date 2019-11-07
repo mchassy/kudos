@@ -9,13 +9,14 @@ RUN apt-get -y autoremove
 RUN apt-get clean
 RUN useradd -m -d /home/ubuntu -b /home/ubuntu -U -G sudo ubuntu && echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 RUN mkdir -p /prj/kudos
-COPY .add_to_bashrc /home/ubuntu
-RUN cat /home/ubuntu/.add_to_bashrc >> /home/ubuntu/.bashrc && rm /home/ubuntu/.add_to_bashrc
 RUN chown -R ubuntu:ubuntu /prj && chmod -R 775 /prj
-RUN chown -R ubuntu:ubuntu /home/ubuntu && chmod -R 775 /home/ubuntu
 RUN rm /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 USER ubuntu
 RUN pip install --user pylint ansible ansible-lint ansible-bender pylint-venv
-RUN echo "export PATH=/home/ubuntu/.local/bin/:$PATH" >> /home/ubuntu/.bashrc
+USER root 
+COPY .add_to_bashrc /home/ubuntu
+RUN cat /home/ubuntu/.add_to_bashrc >> /home/ubuntu/.bashrc && rm /home/ubuntu/.add_to_bashrc
+RUN chown -R ubuntu:ubuntu /home/ubuntu && chmod -R 775 /home/ubuntu
+USER ubuntu 
 CMD /bin/bash
