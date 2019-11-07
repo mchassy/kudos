@@ -4,27 +4,10 @@ export FLASK_ENV=development
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 export PATH="/home/ubuntu/.local/bin:$PATH"
-echo "#######################################################"
-if [[ $CI_JOB_STAGE != "" ]]
+if [[ $CI_JOB_STAGE == "" ]]
 then
-    cd /builds/mapu/kudos
-    echo "Running $CI_JOB_STAGE on Gitlab runner"
-else
-    CI_JOB_STAGE="locally"
     cd /prj
-    echo "Running $CI_JOB_STAGE"
-fi
-echo "from $PWD"
-echo "#######################################################"
-if [[ -d "./env/bin"  && $CI_JOB_STAGE == "locally" ]]
-then
-    echo "#######################################################"
-    echo "Activating virtual environment"
-    echo "#######################################################"
-    source ./env/bin/activate
-fi
-if [[ $CI_JOB_STAGE == "locally" || $CI_JOB_STAGE == "lint_code" ]]
-then
+    echo "Running locally"
     if [[ ! -d "./env/bin" ]]
     then
         echo "#######################################################"
@@ -36,12 +19,38 @@ then
         echo "#######################################################"
         source ./env/bin/activate
         pip install -r ./dev/requirements.txt
+    else
+        echo "#######################################################"
+        echo "Activating virtual environment"
+        echo "#######################################################"
+        source ./env/bin/activate
     fi
-fi
-if [[ $CI_JOB_STAGE == "build_image" ]]
+elif [[ $CI_JOB_STAGE == "lint_code" ]]
 then
-  echo "#######################################################"
-  echo "Installing awscli"
-  echo "#######################################################"
-  sudo apt-get install awscli
+    cd /builds/mapu/kudos
+    echo "Running $CI_JOB_STAGE"
+    echo "#######################################################"
+    echo "Creating virtual environment"
+    echo "#######################################################"
+    python -m venv env
+    echo "#######################################################"
+    echo "Activating virtual environment"
+    echo "#######################################################"
+    source ./env/bin/activate
+    pip install -r ./dev/requirements.txt
+elif [[ $CI_JOB_STAGE == "lint_config" ]]
+then
+    cd /builds/mapu/kudos
+    echo "Running $CI_JOB_STAGE"
+elif [[ $CI_JOB_STAGE == "build_image" ]]
+then
+    cd /builds/mapu/kudos
+    echo "Running $CI_JOB_STAGE"
+    sudo apt-get install awscli
+elif [[ $CI_JOB_STAGE == "test_image" ]]
+then
+    cd /builds/mapu/kudos
+    echo "Running $CI_JOB_STAGE"
+else
+    echo "Something has gone terrible wrong"
 fi
