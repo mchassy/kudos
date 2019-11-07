@@ -20,13 +20,13 @@
     apk:
       name: curl
   # This way of upgrading pip should cause an error on ansible-lint
-  - name: upgrade pip
-    command: 'pip3 install --upgrade pip'
+  # - name: upgrade pip
+  #   command: 'pip3 install --upgrade pip'
   # This way of upgrading pip should pass ansible-lint
-  # - name: install the latest version of pip
-  #   pip:
-  #     name: pip
-  #     extra_args: --upgrade
+  - name: install the latest version of pip
+    pip:
+      name: pip
+      extra_args: --upgrade
   - name: copy in pip requirements
     template: src=../dev/requirements.txt dest=/kudos/requirements.txt mode=0775
   - name: install pip requirments
