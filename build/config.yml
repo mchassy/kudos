@@ -1,0 +1,39 @@
+---
+- name: kudos
+  hosts: all
+  vars:
+    ansible_bender:
+      base_image: "{{ lookup('env','DOCKER_URI') }}/alpine:latest"
+      working_container:
+        working_dir: /kudos
+        volumes:
+          - '{{ playbook_dir }}:/src'
+
+      target_image:
+        name: kudos-prod
+        cmd: "python -m flask run --port 4433"
+        labels:
+          built-by: '{{ ansible_user }}'
+
+  tasks:
+  - name: Install additional packages
+    apk:
+      name: curl
+  # This way of upgrading pip should cause an error on ansible-lint
+  # - name: upgrade pip
+  #   command: 'pip3 install --upgrade pip'
+  # This way of upgrading pip should pass ansible-lint
+  - name: install the latest version of pip
+    pip:
+      name: pip
+      extra_args: --upgrade
+  - name: copy in pip requirements
+    template: src=../dev/requirements.txt dest=/kudos/requirements.txt mode=0775
+  - name: install pip requirments
+    pip:
+      requirments: /kudos/requirements.txt
+  - name: create config directory
+    copy: src=../config path=/kudos mode=0775
+  - name: create code directory
+    copy: src=../kudos_oss path=/kudos mode=0775
+...

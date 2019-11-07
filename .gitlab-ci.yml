@@ -15,25 +15,25 @@ stages:
 
 lint_code:
   stage: lint_code
-  # tags:
-    # - docker
   script:
     - pwd
-    - whoami
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
     - export PATH="/home/ubuntu/.local/bin:$PATH"
     - /home/ubuntu/.bashrc
-    - ls -al /builds/mapu/kudos/env
     - pylint --init-hook="import pylint_venv; pylint_venv.inithook('/builds/mapu/kudos/env')" ./kudos_oss
 
 lint_config:
   stage: lint_config
-  # tags:
-    # - docker
   script:
-    # - ansible-lint ./config/config.yml
-    - echo "No build config yet"
+    - pwd
+    - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
+    - sudo chmod -R 775 /builds/mapu/kudos
+    - export PATH="/home/ubuntu/.local/bin:$PATH"
+    - ls -al /builds/mapu/kudos/env
+    - /home/ubuntu/.bashrc
+    - pwd
+    - ansible-lint ./build/config.yml
   dependencies:
     - lint_code
 build_image:
