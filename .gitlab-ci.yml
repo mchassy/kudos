@@ -19,6 +19,7 @@ lint_code:
     - pwd
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
+    - export PATH="/home/ubuntu/.local/bin:$PATH"
     - /home/ubuntu/.bashrc
     - pylint --init-hook="import pylint_venv; pylint_venv.inithook('/builds/mapu/kudos/env')" ./kudos_oss
 
@@ -29,7 +30,6 @@ lint_config:
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
     - /home/ubuntu/.bashrc
-    - export PATH="/home/ubuntu/.local/bin:$PATH"
     - ansible-lint ./build/config.yml
   dependencies:
     - lint_code
