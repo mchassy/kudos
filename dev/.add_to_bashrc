@@ -46,7 +46,6 @@ elif [[ $CI_JOB_STAGE == "build_image" ]]
 then
     cd /builds/mapu/kudos
     echo "Running $CI_JOB_STAGE"
-    sudo apt-get install awscli
 elif [[ $CI_JOB_STAGE == "test_image" ]]
 then
     cd /builds/mapu/kudos
