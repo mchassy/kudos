@@ -4,7 +4,7 @@ export FLASK_ENV=development
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 export PATH="/home/ubuntu/.local/bin:$PATH"
-if [ -d "/prj" ]
+if [ ! -d "/builds/mapu/" ]
 then
     cd /prj && pwd
     echo "#######################################################"
@@ -26,7 +26,7 @@ else
     echo "#######################################################"
     echo "Creating virtual environment"
     echo "#######################################################"
-    python -m venv env 
+    python -m venv env
     echo "#######################################################"
     echo "Activating virtual environment"
     echo "#######################################################"
