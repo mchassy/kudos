@@ -19,7 +19,7 @@ lint_code:
     - pwd
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
-    - source /home/ubuntu/.bashrc
+    - /home/ubuntu/.bashrc
     - pylint --init-hook="import pylint_venv; pylint_venv.inithook('/builds/mapu/kudos/env')" ./kudos_oss
 
 lint_config:
@@ -28,7 +28,7 @@ lint_config:
     - pwd
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
-    - source /home/ubuntu/.bashrc
+    - /home/ubuntu/.bashrc
     - ansible-lint ./build/config.yml
   dependencies:
     - lint_code
@@ -39,7 +39,7 @@ build_image:
     - aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
-    - source /home/ubuntu/.bashrc
+    - /home/ubuntu/.bashrc
     - ansible-bender build ./config/config.yml
     - ansible-bender list-builds
     - ansible-bender push $DOCKER_URI/ab-webserver:latest 1
