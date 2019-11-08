@@ -12,7 +12,7 @@ default:
     - export LANG=C.UTF-8
     - pip install -r ./dev/requirements.txt
     - which aws
-    - /home/ubuntu/.local/bin/aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
+    - sudo /home/ubuntu/.local/bin/aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
   image:
     name: $DOCKER_URI/kudos-env:latest
     # name: mchassy/gl-validation:latest
