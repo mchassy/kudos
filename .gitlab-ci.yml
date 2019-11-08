@@ -37,7 +37,9 @@ lint_config:
 build_image:
   stage: build_image
   script:
-    - sudo aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
+    - sudo su -
+    - aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
+    - exit
     - ansible-bender build ./build/config.yml
     - ansible-bender list-builds
     - ansible-bender push $DOCKER_URI/ab-webserver:latest 1
