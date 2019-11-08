@@ -8,13 +8,8 @@ variables:
 default:
   before_script:
     - echo "Before Script of Gitlab Runner"
-    - whoami
-    - export PATH="/home/ubuntu/.local/bin:$PATH"
-    - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
-    - sudo chmod -R 775 /builds/mapu/kudos
   image:
     name: $DOCKER_URI/kudos-env:latest
-    user: root
     # name: mchassy/gl-validation:latest
 stages:
   - lint_code
