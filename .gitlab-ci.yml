@@ -8,7 +8,6 @@ variables:
 default:
   before_script:
     - echo "Before Script of Gitlab Runner"
-    - sudo aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
     - pip install -r ./dev/requirements.txt
@@ -38,7 +37,8 @@ lint_config:
 build_image:
   stage: build_image
   script:
-    - ansible-bender build ./config/config.yml
+    - sudo aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
+    - ansible-bender build ./build/config.yml
     - ansible-bender list-builds
     - ansible-bender push $DOCKER_URI/ab-webserver:latest 1
   dependencies:
