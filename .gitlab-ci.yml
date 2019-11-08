@@ -5,15 +5,14 @@ variables:
   FLASK_ENV: development
   LC_ALL: C.UTF-8
   LANG: C.UTF-8
+  DOCKER_AUTH_CONFIG: root
 default:
   before_script:
     - echo "Before Script of Gitlab Runner"
+    - whoami
     - export PATH="/home/ubuntu/.local/bin:$PATH"
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
-    - pip install -r ./dev/requirements.txt
-    - echo "FLASK_APP is $FLASK_APP"
-    - echo "PATH is $PATH"
   image:
     name: $DOCKER_URI/kudos-env:latest
     # name: mchassy/gl-validation:latest
@@ -26,17 +25,21 @@ stages:
 lint_code:
   stage: lint_code
   script:
+    - whoami
+    - pip install -r ./dev/requirements.txt
     - pylint --init-hook="import pylint_venv; pylint_venv.inithook('/builds/mapu/kudos/env')" ./kudos_oss
 
 lint_config:
   stage: lint_config
   script:
+    - whoami
     - ansible-lint ./build/config.yml
   dependencies:
     - lint_code
 build_image:
   stage: build_image
   script:
+    - whoami
     - aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
     - ansible-bender build ./build/config.yml
     - ansible-bender list-builds
