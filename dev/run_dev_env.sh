@@ -7,4 +7,4 @@ docker run -it --rm \
   -v /Users/markchassy/git/kudos/config:/prj/config \
   -v /Users/markchassy/git/kudos/dev:/prj/dev \
   -v /Users/markchassy/git/kudos/build:/prj/build \
-  kudos-env:latest
+  $DOCKER_URI/kudos-env:latest

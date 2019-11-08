@@ -3,6 +3,7 @@ export APP_CONFIG_FILE=/prj/kudos/config/development.py
 export FLASK_ENV=development
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
+#export PATH="/home/ubuntu/.local/bin:$PATH"
 if [[ $CI_JOB_STAGE == "" ]]
 then
     cd /prj
