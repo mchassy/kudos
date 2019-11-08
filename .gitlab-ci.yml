@@ -1,6 +1,5 @@
 variables:
   DOCKER_DRIVER: overlay
-  PATH: "/home/ubuntu/.local/bin:$PATH"
   FLASK_APP: /prj/kudos/kudos_oss/app/http/api/endpoints.py
   APP_CONFIG_FILE: /prj/kudos/config/development.py
   FLASK_ENV: development
@@ -9,6 +8,7 @@ variables:
 default:
   before_script:
     - echo "Before Script of Gitlab Runner"
+    - export PATH="/home/ubuntu/.local/bin:$PATH"
     - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
     - sudo chmod -R 775 /builds/mapu/kudos
     - pip install -r ./dev/requirements.txt
@@ -17,8 +17,6 @@ default:
   image:
     name: $DOCKER_URI/kudos-env:latest
     # name: mchassy/gl-validation:latest
-
-
 stages:
   - lint_code
   - lint_config
