@@ -25,31 +25,6 @@ then
         echo "#######################################################"
         source ./env/bin/activate
     fi
-elif [[ $CI_JOB_STAGE == "lint_code" ]]
-then
-    cd /builds/mapu/kudos
-    echo "Running $CI_JOB_STAGE"
-    echo "#######################################################"
-    echo "Creating virtual environment"
-    echo "#######################################################"
-    python -m venv env
-    echo "#######################################################"
-    echo "Activating virtual environment"
-    echo "#######################################################"
-    source ./env/bin/activate
-    pip install -r ./dev/requirements.txt
-elif [[ $CI_JOB_STAGE == "lint_config" ]]
-then
-    cd /builds/mapu/kudos
-    echo "Running $CI_JOB_STAGE"
-elif [[ $CI_JOB_STAGE == "build_image" ]]
-then
-    cd /builds/mapu/kudos
-    echo "Running $CI_JOB_STAGE"
-elif [[ $CI_JOB_STAGE == "test_image" ]]
-then
-    cd /builds/mapu/kudos
-    echo "Running $CI_JOB_STAGE"
 else
-    echo "Something has gone terrible wrong"
+    echo "Running on Gitlab"
 fi

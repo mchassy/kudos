@@ -1,6 +1,17 @@
 default:
   before_script:
     - echo "Before Script of Gitlab Runner"
+    - pwd
+    - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
+    - sudo chmod -R 775 /builds/mapu/kudos
+    - export PATH="/home/ubuntu/.local/bin:$PATH"
+    - export FLASK_APP=/prj/kudos/kudos_oss/app/http/api/endpoints.py
+    - export APP_CONFIG_FILE=/prj/kudos/config/development.py
+    - export FLASK_ENV=development
+    - export LC_ALL=C.UTF-8
+    - export LANG=C.UTF-8
+    - pip install -r ./dev/requirements.txt
+    - aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
   image:
     name: $DOCKER_URI/kudos-env:latest
     # name: mchassy/gl-validation:latest
@@ -16,31 +27,17 @@ stages:
 lint_code:
   stage: lint_code
   script:
-    - pwd
-    - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
-    - sudo chmod -R 775 /builds/mapu/kudos
-    - export PATH="/home/ubuntu/.local/bin:$PATH"
-    - /home/ubuntu/.bashrc
     - pylint --init-hook="import pylint_venv; pylint_venv.inithook('/builds/mapu/kudos/env')" ./kudos_oss
 
 lint_config:
   stage: lint_config
   script:
-    - pwd
-    - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
-    - sudo chmod -R 775 /builds/mapu/kudos
-    - /home/ubuntu/.bashrc
     - ansible-lint ./build/config.yml
   dependencies:
     - lint_code
 build_image:
   stage: build_image
   script:
-    - pwd
-    - aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
-    - sudo chown -R ubuntu:ubuntu /builds/mapu/kudos
-    - sudo chmod -R 775 /builds/mapu/kudos
-    - /home/ubuntu/.bashrc
     - ansible-bender build ./config/config.yml
     - ansible-bender list-builds
     - ansible-bender push $DOCKER_URI/ab-webserver:latest 1
