@@ -11,8 +11,6 @@ default:
     - export LC_ALL=C.UTF-8
     - export LANG=C.UTF-8
     - pip install -r ./dev/requirements.txt
-    - which aws
-    - sudo /home/ubuntu/.local/bin/aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
   image:
     name: $DOCKER_URI/kudos-env:latest
     # name: mchassy/gl-validation:latest
@@ -39,6 +37,8 @@ lint_config:
 build_image:
   stage: build_image
   script:
+    - which aws
+    - aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
     - ansible-bender build ./config/config.yml
     - ansible-bender list-builds
     - ansible-bender push $DOCKER_URI/ab-webserver:latest 1
