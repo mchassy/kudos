@@ -4,12 +4,12 @@ variables:
   FLASK_ENV: development
   LC_ALL: C.UTF-8
   LANG: C.UTF-8
+  DOCKER_DRIVER: overlay
 default:
   before_script:
     - echo "Before Script of Gitlab Runner"
   image:
     name: $DOCKER_URI/kudos-env:latest
-    # name: mchassy/gl-validation:latest
 stages:
   - lint_code
   - lint_config
