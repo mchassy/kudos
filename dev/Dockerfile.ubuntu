@@ -1,0 +1,31 @@
+FROM ubuntu:latest
+RUN apt-get update -qq && apt-get install -qq -y software-properties-common curl
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN add-apt-repository -y ppa:projectatomic/ppa
+RUN apt-get update && apt-get upgrade
+RUN apt-get -qq -y install buildah curl git iptables iputils-ping nodejs npm openssl openssl1.0 podman \
+   python3-openssl python3 python3-venv python3-pip sudo systemd vim yarn wget
+RUN mkdir -p /prj/kudos
+RUN rm /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -s /usr/bin/pip3 /usr/bin/pip
+RUN pip install awscli pylint ansible ansible-lint ansible-bender pylint-venv
+RUN apt-get -y autoremove && apt-get clean && \
+(cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+rm -f /lib/systemd/system/multi-user.target.wants/* \
+rm -f /etc/systemd/system/*.wants/* \
+rm -f /lib/systemd/system/local-fs.target.wants/* \
+rm -f /lib/systemd/system/sockets.target.wants/*udev* \
+rm -f /lib/systemd/system/sockets.target.wants/*initctl* \
+rm -f /lib/systemd/system/basic.target.wants/* \
+rm -f /lib/systemd/system/anaconda.target.wants/* ;
+
+RUN sed -i "s/driver = \"overlay\"/driver = \"vfs\"/g" /etc/containers/storage.conf \
+    && sed -i '/^mountopt =.*/d' /etc/containers/storage.conf \
+    && sed -i "s/cgroup_manager = \"systemd\"/cgroup_manager = \"cgroupfs\"/g" /usr/share/containers/libpod.conf \
+    && sed -i "s/# events_logger = \"journald\"/events_logger = \"file\"/g" /usr/share/containers/libpod.conf \
+    && cp -a /usr/share/containers/libpod.conf /etc/containers/ \
+    && sed -i "s/cgroup_manager = \"systemd\"/cgroup_manager = \"cgroupfs\"/g" /etc/containers/libpod.conf
+COPY ./entrypoint.sh /entrypoint.sh
+CMD /bin/bash
+ENTRYPOINT ["/entrypoint.sh"]

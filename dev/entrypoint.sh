@@ -1,23 +1,25 @@
+#!/bin/bash
+export DOCKER_URI=508384386034.dkr.ecr.us-east-1.amazonaws.com
 export FLASK_APP=/prj/kudos/kudos_oss/app/http/api/endpoints.py
 export APP_CONFIG_FILE=/prj/kudos/config/development.py
 export FLASK_ENV=development
-export LC_ALL=C.UTF-8
-export LANG=C.UTF-8
+# export LC_ALL=C.UTF-8
+# export LANG=C.UTF-8
+cd /prj
 if [[ $CI_JOB_STAGE == "" ]]
 then
-    cd /prj
     echo "Running locally"
     if [[ ! -d "./env/bin" ]]
     then
         echo "#######################################################"
         echo "Creating virtual environment"
         echo "#######################################################"
-        python -m venv env
+        python3 -m venv env
         echo "#######################################################"
         echo "Activating virtual environment"
         echo "#######################################################"
         source ./env/bin/activate
-        pip install -r ./dev/requirements.txt
+        pip3 install -r ./dev/requirements.txt
     else
         echo "#######################################################"
         echo "Activating virtual environment"
@@ -25,5 +27,12 @@ then
         source ./env/bin/activate
     fi
 else
-    echo "Running on Gitlab"
+  echo "#######################################################"
+  echo "Activating virtual environment"
+  echo "#######################################################"
+  source ./env/bin/activate
 fi
+
+aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
+
+bash

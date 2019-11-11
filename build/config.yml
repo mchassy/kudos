@@ -5,7 +5,7 @@
     ansible_bender:
       base_image: "{{ lookup('env','DOCKER_URI') }}/alpine:latest"
       working_container:
-        working_dir: /kudos
+        working_dir: /prj/kudos
         volumes:
           - '{{ playbook_dir }}:/src'
 
@@ -27,13 +27,15 @@
     pip:
       name: pip
       extra_args: --upgrade
+  - name: create /kudos directory
+    file: name=/kudos state=directory mode=0775
   - name: copy in pip requirements
     template: src=../dev/requirements.txt dest=/kudos/requirements.txt mode=0775
   - name: install pip requirments
     pip:
-      requirments: /kudos/requirements.txt
+      requirements: /kudos/requirements.txt
   - name: create config directory
-    copy: src=../config path=/kudos mode=0775
+    copy: src=../config dest=/kudos mode=0775
   - name: create code directory
-    copy: src=../kudos_oss path=/kudos mode=0775
+    copy: src=../kudos/kudos_oss dest=/kudos mode=0775
 ...
