@@ -37,5 +37,5 @@
   - name: create config directory
     copy: src=../config dest=/kudos mode=0775
   - name: create code directory
-    copy: src=../kudos/kudos_oss dest=/kudos mode=0775
+    copy: src=../kudos_oss dest=/kudos mode=0775
 ...
