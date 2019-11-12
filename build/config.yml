@@ -11,7 +11,7 @@
           - '{{ playbook_dir }}:/src'
 
       target_image:
-        name: kudos-int
+        name: kudos
         # entrypoint: dumb-init /entrypoint.sh
         # entrypoint: "dumb-init /entrypoint.sh"
         # entrypoint: ["dumb-init", "/entrypoint.sh"]
