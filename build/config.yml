@@ -2,7 +2,7 @@
 - name: kudos
   hosts: all
   vars:
-    execution_environment: development
+    execution_environment: integration
     ansible_bender:
       base_image: "{{ lookup('env','DOCKER_URI') }}/alpine:latest"
       working_container:
@@ -11,10 +11,11 @@
           - '{{ playbook_dir }}:/src'
 
       target_image:
-        name: kudos-prod
-        entrypoint: dumb-init /entrypoint.sh
+        name: kudos-int
+        # entrypoint: dumb-init /entrypoint.sh
         # entrypoint: "dumb-init /entrypoint.sh"
         # entrypoint: ["dumb-init", "/entrypoint.sh"]
+        cmd: /bin/sh
         labels:
           built-by: '{{ ansible_user }}'
   tasks:

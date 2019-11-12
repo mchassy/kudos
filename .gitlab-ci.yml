@@ -29,19 +29,20 @@ build_image:
     - ansible-bender build  ./build/config.yml
     # - ansible-bender build  --entrypoint "/entrypoint.sh" ./build/config.yml
     - ansible-bender list-builds
-    - ansible-bender push $DOCKER_URI/kudos-prod:latest 1
+    - ansible-bender push $DOCKER_URI/kudos-int:latest 1
   dependencies:
     - lint_config
 test_image:
   stage: test_image
-  # image: $DOCKER_URI/gl-docker:latest
+  image: $DOCKER_URI/gl-docker:latest
   # services:
   # - $DOCKER_URI/ab-webserver
   # tags:
   #   - docker
   script:
-    # - echo "Testing web server"
-    # - curl -s $DOCKER_URI-ab-webserver:8080
-    - echo "No build config yet"
+    - echo "Testing web server"
+    - docker run --rm -it $DOCKER_URI/kudos-int:latest
+    - exit
+    - echo "Whooop whoop"
   dependencies:
     - build_image
