@@ -2,7 +2,7 @@ variables:
   DOCKER_DRIVER: overlay
 default:
   before_script:
-    - echo "Gitlab Runner Execution: $CI_JOB_STAGE"
+    - echo "Gitlab Runner Stage $CI_JOB_STAGE"
   image:
     name: $DOCKER_URI/kudos-env:latest
 stages:
