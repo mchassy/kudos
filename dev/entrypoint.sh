@@ -3,6 +3,8 @@ export DOCKER_URI=508384386034.dkr.ecr.us-east-1.amazonaws.com
 export FLASK_APP=/prj/kudos/kudos_oss/app/http/api/endpoints.py
 export APP_CONFIG_FILE=/prj/kudos/config/development.py
 export FLASK_ENV=development
+# export LC_ALL=C.UTF-8
+# export LANG=C.UTF-8
 cd /prj
 if [[ $CI_JOB_STAGE == "" ]]
 then
