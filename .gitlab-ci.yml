@@ -44,8 +44,10 @@ test_image:
     - pwd
     - $(aws ecr get-login --no-include-email --region us-east-1)
     - docker images
-    - docker run -d -i --entrypoint /entrypoint.sh $DOCKER_URI/kudos:test
+    - docker run -d -i --name test_container --entrypoint /entrypoint.sh $DOCKER_URI/kudos:test
+    - sleep 3
     - docker ps
+    - docker rm -f test_container
     - echo "Whooop whoop"
   dependencies:
     - build_image
