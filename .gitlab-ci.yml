@@ -41,6 +41,8 @@ test_image:
   #   - docker
   script:
     - echo "Testing web server"
+    - pwd
+    - $(aws ecr get-login --no-include-email --region us-east-1)
     - docker images
     - docker run -d -i $DOCKER_URI/kudos:test
     - docker ps
