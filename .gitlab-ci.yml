@@ -1,13 +1,8 @@
 variables:
-  # FLASK_APP: /prj/kudos/kudos_oss/app/http/api/endpoints.py
-  # APP_CONFIG_FILE: /prj/kudos/config/development.py
-  # FLASK_ENV: development
-  # LC_ALL: C.UTF-8
-  # LANG: C.UTF-8
   DOCKER_DRIVER: overlay
 default:
   before_script:
-    - echo "Before Script of Gitlab Runner"
+    - echo "Gitlab Runner Execution: $CI_JOB_STAGE"
   image:
     name: $DOCKER_URI/kudos-env:latest
 stages:
@@ -19,7 +14,6 @@ stages:
 lint_code:
   stage: lint_code
   script:
-    - echo "FLASK_APP is $FLASK_APP"
     - pip install -r ./dev/requirements.txt
     - pylint --init-hook="import pylint_venv; pylint_venv.inithook('/builds/mapu/kudos/env')" ./kudos_oss
 
@@ -33,7 +27,6 @@ lint_config:
 build_image:
   stage: build_image
   script:
-    - whoami
     - ansible-bender build ./build/config.yml
     - ansible-bender list-builds
     - ansible-bender push $DOCKER_URI/kudos-prod:latest 1
