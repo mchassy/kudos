@@ -12,7 +12,6 @@
 
       target_image:
         name: kudos-prod
-        entrypoint: "dumb-init /entrypoint.sh"
         labels:
           built-by: '{{ ansible_user }}'
   tasks:

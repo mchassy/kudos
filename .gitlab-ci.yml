@@ -26,7 +26,7 @@ lint_config:
 build_image:
   stage: build_image
   script:
-    - ansible-bender build ./build/config.yml
+    - ansible-bender build  --entrypoint /entrypoint.sh ./build/config.yml
     - ansible-bender list-builds
     - ansible-bender push $DOCKER_URI/kudos-prod:latest 1
   dependencies:
