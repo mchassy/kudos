@@ -41,8 +41,9 @@ test_image:
   #   - docker
   script:
     - echo "Testing web server"
-    - docker run --rm -it $DOCKER_URI/kudos:test
-    - exit
+    - docker images
+    - docker run -d -i $DOCKER_URI/kudos:test
+    - docker ps
     - echo "Whooop whoop"
   dependencies:
     - build_image
