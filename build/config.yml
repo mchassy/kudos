@@ -11,10 +11,13 @@
 
       target_image:
         name: kudos-prod
-        entrypoint: ["dumb-init", "/bin/sh", "-c", "python", "-m", "flask", "run", "--port", "4433", ]
+        entrypoint: ["dumb-init", "/bin/sh", "-c", "python3", "-m", "flask", "run", "--port", "4433", "&", ]
         labels:
           built-by: '{{ ansible_user }}'
-
+  environment:
+    FLASK_APP: /prj/kudos/kudos_oss/app/http/api/endpoints.py
+    APP_CONFIG_FILE: /prj/kudos/config/development.py
+    FLASK_ENV: development
   tasks:
   - name: Install additional packages
     apk:

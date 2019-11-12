@@ -20,7 +20,6 @@ lint_code:
 lint_config:
   stage: lint_config
   script:
-    - whoami
     - ansible-lint ./build/config.yml
   dependencies:
     - lint_code
