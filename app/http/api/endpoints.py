@@ -5,7 +5,7 @@ from app.kudo.schema import GithubRepoSchema
 from flask_cors import CORS
 
 
-app = Flask( __name__ )
+app = Flask(__name__)
 CORS(app)
 
 @app.route("/kudos", methods=["GET"])
