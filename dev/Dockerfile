@@ -18,7 +18,7 @@ RUN yum -y install epel-release \
 
 RUN pip3 install awscli pylint ansible ansible-lint ansible-bender pylint-venv
 
-RUN mkdir -p /prj/kudos && cd /prj && python3 -m venv /prj/env && source /prj/env/bin/activate
+RUN mkdir -p /prj/kudos && cd /prj && python3 -p python3 -m venv /prj/env && source /prj/env/bin/activate
 
 # Install systemd -- See https://hub.docker.com/_/centos/
 RUN yum -y update; yum clean all; \

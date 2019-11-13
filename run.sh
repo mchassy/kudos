@@ -2,7 +2,7 @@ docker run -it --rm \
   --name kudos-development \
   --privileged --env PROJECT_ROOT=/prj \
   -u root \
-  -v $(PWD)/kudos_oss:/prj/kudos/kudos_oss \
+  -v $(PWD)/app:/prj/app \
   -v $(PWD)/env:/prj/env \
   -v $(PWD)/config:/prj/config \
   -v $(PWD)/dev:/prj/dev \
