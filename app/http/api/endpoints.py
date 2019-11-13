@@ -9,10 +9,12 @@ from flask_cors import CORS
 APP = Flask(__name__)
 CORS(APP)
 
+
 @APP.route("/kudos", methods=["GET"])
 @login_required
 def index():
     return json_response(Kudo(g.user).find_all_kudos())
+
 
 @APP.route("/kudos", methods=["POST"])
 @login_required
@@ -23,6 +25,7 @@ def create():
     kudo = Kudo(g.user).create_kudo_for(github_repo)
     return json_response(kudo)
 
+
 @APP.route("/kudo/<int:repo_id>", methods=["GET"])
 @login_required
 def show(repo_id):
@@ -31,6 +34,7 @@ def show(repo_id):
         return json_response(kudo)
     else:
         return json_response({'error': 'kudo not found'}, 404)
+
 
 @APP.route("/kudo/<int:repo_id>", methods=["PUT"])
 @login_required
@@ -44,6 +48,7 @@ def update(repo_id):
     else:
         return json_response({'error': 'kudo not found'}, 404)
 
+
 @APP.route("/kudo/<int:repo_id>", methods=["DELETE"])
 @login_required
 def delete(repo_id):
@@ -52,6 +57,7 @@ def delete(repo_id):
         return json_response({})
     else:
         return json_response({'error': 'kudo not found'}, 404)
+
 
 def json_response(payload, status=200):
     return (json.dumps(payload), status, {'content-type': 'APPlication/json'})
