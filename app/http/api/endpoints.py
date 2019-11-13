@@ -6,15 +6,15 @@ from app.kudo.schema import GithubRepoSchema
 from flask_cors import CORS
 
 
-app = Flask(__name__)
-CORS(app)
+APP = Flask(__name__)
+CORS(APP)
 
-@app.route("/kudos", methods=["GET"])
+@APP.route("/kudos", methods=["GET"])
 @login_required
 def index():
     return json_response(Kudo(g.user).find_all_kudos())
 
-@app.route("/kudos", methods=["POST"])
+@APP.route("/kudos", methods=["POST"])
 @login_required
 def create():
     github_repo = GithubRepoSchema().load(json.loads(request.data))
@@ -23,7 +23,7 @@ def create():
     kudo = Kudo(g.user).create_kudo_for(github_repo)
     return json_response(kudo)
 
-@app.route("/kudo/<int:repo_id>", methods=["GET"])
+@APP.route("/kudo/<int:repo_id>", methods=["GET"])
 @login_required
 def show(repo_id):
     kudo = Kudo(g.user).find_kudo(repo_id)
@@ -32,7 +32,7 @@ def show(repo_id):
     else:
         return json_response({'error': 'kudo not found'}, 404)
 
-@app.route("/kudo/<int:repo_id>", methods=["PUT"])
+@APP.route("/kudo/<int:repo_id>", methods=["PUT"])
 @login_required
 def update(repo_id):
     github_repo = GithubRepoSchema().load(json.loads(request.data))
@@ -44,7 +44,7 @@ def update(repo_id):
     else:
         return json_response({'error': 'kudo not found'}, 404)
 
-@app.route("/kudo/<int:repo_id>", methods=["DELETE"])
+@APP.route("/kudo/<int:repo_id>", methods=["DELETE"])
 @login_required
 def delete(repo_id):
     kudo_service = Kudo(g.user)
@@ -54,4 +54,4 @@ def delete(repo_id):
         return json_response({'error': 'kudo not found'}, 404)
 
 def json_response(payload, status=200):
-    return (json.dumps(payload), status, {'content-type': 'application/json'})
+    return (json.dumps(payload), status, {'content-type': 'APPlication/json'})
