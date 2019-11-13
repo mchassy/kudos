@@ -48,6 +48,8 @@ test_image:
     - sleep 3
     - docker ps
     - docker rm -f test_container
-    - echo "Whooop whoop"
+    - docker rmi -f $DOCKER_URI/kudos:test
+    - docker ps
+    - docker images
   dependencies:
     - build_image
