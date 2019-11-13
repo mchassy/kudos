@@ -1,3 +1,4 @@
+"""Endpoints Module"""
 from .middlewares import login_required
 from flask import Flask, json, g, request
 from app.kudo.service import Service as Kudo
