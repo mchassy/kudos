@@ -14,7 +14,10 @@ stages:
 lint_code:
   stage: lint_code
   script:
+    - source ./env/bin/activate
     - pip install -r ./dev/requirements.txt
+    - pip list
+    - pwd
     - pylint --init-hook="import pylint_venv; pylint_venv.inithook('/builds/mapu/kudos/env')" ./app
 
 lint_config:
