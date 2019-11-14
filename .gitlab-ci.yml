@@ -3,6 +3,7 @@ variables:
 default:
   before_script:
     - echo "Gitlab Runner Stage $CI_JOB_STAGE"
+    - ls -al
   image:
     name: $DOCKER_URI/kudos-development:latest
 stages:
@@ -14,12 +15,10 @@ stages:
 lint_code:
   stage: lint_code
   script:
-    - ls -al
     - python -m venv env
     - source ./env/bin/activate
     - pip install -r ./dev/requirements.txt
     - pip list
-    - pwd
     - pylint --init-hook="import pylint_venv;
       pylint_venv.inithook('/builds/mapu/kudos/env')" --max-line-length=140 ./app
 
