@@ -41,7 +41,7 @@ RUN sed -i "s/driver = \"overlay\"/driver = \"vfs\"/g" /etc/containers/storage.c
 
 COPY ./entrypoint.sh /
 RUN chmod +x /entrypoint.sh
-WORKDIR /builds/mapu/kudos
-VOLUME ["/builds/mapu/kudos"]
+WORKDIR /prj
+VOLUME ["/prj"]
 VOLUME ["/sys/fs/cgroup"]
 ENTRYPOINT ["/entrypoint.sh"]

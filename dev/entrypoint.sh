@@ -1,6 +1,4 @@
 #!/bin/bash
-export PRJ_DIR=/builds/mapu/kudos
-export DOCKER_URI=508384386034.dkr.ecr.us-east-1.amazonaws.com
 export FLASK_APP=$PRJ_DIR/app/http/api/endpoints.py
 export APP_CONFIG_FILE=$PRJ_DIR/config/development.py
 export FLASK_ENV=development

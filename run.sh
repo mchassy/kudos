@@ -1,7 +1,8 @@
 docker run -it --rm \
   --name kudos-development  \
+  --env PRJ_DIR=/prj \
   --privileged  \
-  -v $(PWD):/builds/mapu/kudos:rw \
+  -v $(PWD):/prj:rw \
   -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
   -v /var/run/docker.sock:/var/run/docker.sock:ro \
   -v /Users/markchassy/.aws:/root/.aws:ro \
