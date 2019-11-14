@@ -31,6 +31,9 @@ if ! test -f "./env/bin/flask"; then
     echo "#######################################################"
     echo "Installing pip requirments"
     echo "#######################################################"
+    echo "Checking things out"
+    ls -al
+    ls -al dev
     pip install -r ./dev/requirements.txt
 fi
 bash
