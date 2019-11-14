@@ -27,13 +27,12 @@ fi
 echo "#######################################################"
 echo "Virtual environment activated"
 echo "#######################################################"
-if ! test -f "./env/bin/flask"; then
+# if ! test -f "./env/bin/flask"; then
+if [[ $CI_JOB_STAGE -eq "locally" ]] && ! test -f "./env/bin/flask"
+then
     echo "#######################################################"
     echo "Installing pip requirments"
     echo "#######################################################"
-    echo "Checking things out"
-    ls -al
-    ls -al dev
     pip install -r ./dev/requirements.txt
 fi
 bash
