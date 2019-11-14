@@ -16,9 +16,9 @@ RUN yum -y install epel-release \
         python-virtualenv \
     && yum clean all
 
+RUN pip3 install --upgrade pip
 RUN pip3 install awscli pylint ansible ansible-lint ansible-bender pylint-venv
 
-RUN mkdir -p /prj/kudos && cd /prj && python3 -p python3 -m venv /prj/env && source /prj/env/bin/activate
 
 # Install systemd -- See https://hub.docker.com/_/centos/
 RUN yum -y update; yum clean all; \
@@ -31,18 +31,17 @@ rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
 rm -f /lib/systemd/system/basic.target.wants/*; \
 rm -f /lib/systemd/system/anaconda.target.wants/*;
 
-COPY ./entrypoint.sh /
 
 RUN sed -i "s/driver = \"overlay\"/driver = \"vfs\"/g" /etc/containers/storage.conf \
     && sed -i '/^mountopt =.*/d' /etc/containers/storage.conf \
     && sed -i "s/cgroup_manager = \"systemd\"/cgroup_manager = \"cgroupfs\"/g" /usr/share/containers/libpod.conf \
     && sed -i "s/# events_logger = \"journald\"/events_logger = \"file\"/g" /usr/share/containers/libpod.conf \
     && cp -a /usr/share/containers/libpod.conf /etc/containers/ \
-    && sed -i "s/cgroup_manager = \"systemd\"/cgroup_manager = \"cgroupfs\"/g" /etc/containers/libpod.conf \
-    && chmod +x /entrypoint.sh
+    && sed -i "s/cgroup_manager = \"systemd\"/cgroup_manager = \"cgroupfs\"/g" /etc/containers/libpod.conf
 
-WORKDIR /prj
-
+COPY ./entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+WORKDIR /builds/mapu/kudos
+VOLUME ["/builds/mapu/kudos"]
 VOLUME ["/sys/fs/cgroup"]
-
 ENTRYPOINT ["/entrypoint.sh"]

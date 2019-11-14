@@ -9,7 +9,8 @@ def login_required(f):
     def wrap(*args, **kwargs):
         authorization = request.headers.get("authorization", None)
         if not authorization:
-            return json.dumps({'error': 'no authorization token provied'}), 403,
+            return json.dumps({'error': 'no authorization token provied'}),
+            403,
             {'Content-type': 'application/json'}
         try:
             token = authorization.split(' ')[1]
