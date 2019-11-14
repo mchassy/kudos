@@ -19,7 +19,7 @@ lint_code:
     - pip install -r ./dev/requirements.txt
     - pip list
     - pwd
-    - pylint --init-hook="import pylint_venv; \
+    - pylint --init-hook="import pylint_venv;
       pylint_venv.inithook('/builds/mapu/kudos/env')" --max-line-length=140 ./app
 
 lint_config:
