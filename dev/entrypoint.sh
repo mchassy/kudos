@@ -34,6 +34,7 @@ fi
 # if ! test -f "./env/bin/flask"; then
 if [[ $CI_JOB_STAGE -eq "locally" ]] && ! test -f "./env/bin/flask"
 then
+    echo "CI_JOB_STAGE is $CI_JOB_STAGE"
     echo "#######################################################"
     echo "Installing pip requirments"
     echo "#######################################################"
