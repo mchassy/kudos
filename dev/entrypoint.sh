@@ -2,8 +2,6 @@
 export FLASK_APP=$PRJ_DIR/app/http/api/endpoints.py
 export APP_CONFIG_FILE=$PRJ_DIR/config/development.py
 export FLASK_ENV=development
-# export LC_ALL=C.UTF-8
-# export LANG=C.UTF-8
 echo "STARTING ENTRYPOINT"
 echo "PWD is $PWD"
 echo "LISTING FOLDERS"

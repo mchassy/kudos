@@ -46,7 +46,7 @@
   - name: create config directory
     copy: src=../config dest=/kudos mode=0775
   - name: create code directory
-    copy: src=../kudos_oss dest=/kudos mode=0775
+    copy: src=../app dest=/kudos mode=0775
   - name: copy in entrypoint.sh
     template: src=./entrypoint.sh dest=/entrypoint.sh mode=0775
 ...

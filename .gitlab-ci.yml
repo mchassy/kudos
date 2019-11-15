@@ -17,7 +17,7 @@ lint_code:
     - python -m venv env
     - source ./env/bin/activate
     - pip install -r ./dev/requirements.txt
-    - pylint --rcfile=./dev/.pylintrc ./app 
+    - pylint --rcfile=./dev/.pylintrc ./app
 
 lint_config:
   stage: lint_config
@@ -29,7 +29,6 @@ build_image:
   stage: build_image
   script:
     - ansible-bender build  ./build/config.yml
-    # - ansible-bender build  --entrypoint "/entrypoint.sh" ./build/config.yml
     - ansible-bender list-builds
     - ansible-bender push $DOCKER_URI/kudos:test 1
   dependencies:
