@@ -1,7 +1,8 @@
-#!/bin/sh
-export FLASK_APP=/prj/kudos/kudos_oss/app/http/api/endpoints.py
-export APP_CONFIG_FILE=/prj/kudos/config/integration.py
+#!/bin/bash
+export FLASK_APP=/kudos/app/http/api/endpoints.py
+export APP_CONFIG_FILE=/kudos/config/{{ execution_environment }}.py
 export FLASK_ENV={{ execution_environment }}
-python3 -m flask run --port 4433 &
 echo "FLASK_APP is $FLASK_APP"
-/bin/sh
+python3 -m flask run --port 4433 &
+
+bash

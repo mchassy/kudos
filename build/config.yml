@@ -15,13 +15,13 @@
         # entrypoint: dumb-init /entrypoint.sh
         # entrypoint: "dumb-init /entrypoint.sh"
         # entrypoint: ["dumb-init", "/entrypoint.sh"]
-        cmd: /bin/sh
+        cmd: /bin/bash
         labels:
           built-by: '{{ ansible_user }}'
   tasks:
   - name: Install additional packages
     apk:
-      name: curl dumb-init
+      name: bash curl dumb-init
   # This way of upgrading pip should cause an error on ansible-lint
   # - name: upgrade pip
   #   command: 'pip3 install --upgrade pip'
