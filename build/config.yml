@@ -14,7 +14,7 @@
         name: kudos
         # entrypoint: dumb-init /entrypoint.sh
         # entrypoint: "dumb-init /entrypoint.sh"
-        # entrypoint: ["dumb-init", "/entrypoint.sh"]
+        entrypoint: ["dumb-init", "/entrypoint.sh"]
         cmd: /bin/bash
         labels:
           built-by: '{{ ansible_user }}'
