@@ -44,9 +44,10 @@ test_image:
     - echo "Testing web server"
     - $(aws ecr get-login --no-include-email --region us-east-1)
     - docker images
-    - docker run -d -i --name test_container --entrypoint /entrypoint.sh $DOCKER_URI/kudos:test
-    - sleep 3
+    - docker run -d -i -p 3010:3000 --name test_container $DOCKER_URI/kudos:test
+    - sleep 60
     - docker ps
+    - curl localhost:3010
     - docker rm -f test_container
     - docker rmi -f $DOCKER_URI/kudos:test
     - docker ps

@@ -21,7 +21,7 @@
   tasks:
   - name: Install additional packages
     apk:
-      name: bash curl dumb-init
+      name: bash curl dumb-init which
   # This way of upgrading pip should cause an error on ansible-lint
   # - name: upgrade pip
   #   command: 'pip3 install --upgrade pip'

@@ -1,14 +1,11 @@
 #!/bin/bash
 export FLASK_APP=$PRJ_DIR/app/http/api/endpoints.py
-export APP_CONFIG_FILE=$PRJ_DIR/config/development.py
-export FLASK_ENV=development
-echo "STARTING ENTRYPOINT"
-echo "PWD is $PWD"
-echo "LISTING FOLDERS"
-ls -al
+export APP_CONFIG_FILE=$PRJ_DIR/config/integration.py
+export FLASK_ENV=integration
 if [[ -z "${CI_JOB_STAGE}" ]]
 then
     CI_JOB_STAGE="locally"
+    export PATH="/prj/env/bin:$PATH"
 fi
 echo "CI_JOB_STAGE is $CI_JOB_STAGE"
 echo "Running $CI_JOB_STAGE"
