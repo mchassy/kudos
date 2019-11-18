@@ -1,40 +1,28 @@
 #!/bin/bash
-export FLASK_APP=$PRJ_DIR/app/http/api/endpoints.py
-export APP_CONFIG_FILE=$PRJ_DIR/config/integration.py
-export FLASK_ENV=integration
 if [[ -z "${CI_JOB_STAGE}" ]]
 then
-    CI_JOB_STAGE="locally"
+    export FLASK_APP=/prj/app/http/api/endpoints.py
+    export APP_CONFIG_FILE=/prj/config/integration.py
+    export FLASK_ENV=integration
     export PATH="/prj/env/bin:$PATH"
-fi
-echo "CI_JOB_STAGE is $CI_JOB_STAGE"
-echo "Running $CI_JOB_STAGE"
-if [[ $CI_JOB_STAGE == "build_image" ]]
-then
-    echo "Buildah Login"
-    aws ecr get-login --no-include-email --region us-east-1 >&1 | $(sed 's/docker/buildah/')
-fi
-if test -f "./env/bin/activate"; then
+    if ! test -f "./env/bin/activate"; then
+        echo "#######################################################"
+        echo "Creating virtual environment"
+        echo "#######################################################"
+        python3 -m venv env
+    fi
     echo "#######################################################"
-    echo "Activate virtual environment"
+    echo "Acitvating virtual environment"
     echo "#######################################################"
     source ./env/bin/activate
-else
-    echo "#######################################################"
-    echo "Creating and activate virtual environment"
-    echo "#######################################################"
-    python3 -m venv env
-    source ./env/bin/activate
-fi
-# if ! test -f "./env/bin/flask"; then
-if [[ $CI_JOB_STAGE -eq "locally" ]] && ! test -f "./env/bin/flask"
-then
-    echo "CI_JOB_STAGE is $CI_JOB_STAGE"
-    echo "#######################################################"
-    echo "Installing pip requirments"
-    echo "#######################################################"
-    ls -al ./env/bin
-    pip install -r ./dev/requirements.txt
+    if ! test -f "./env/bin/flask"
+    then
+        echo "#######################################################"
+        echo "Installing pip requirements"
+        echo "#######################################################"
+        ls -al ./env/bin
+        pip install -r ./dev/requirements.txt
+    fi
 fi
 
 bash
