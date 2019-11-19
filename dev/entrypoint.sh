@@ -5,6 +5,7 @@ then
     export APP_CONFIG_FILE=/prj/config/integration.py
     export FLASK_ENV=integration
     export PATH="/prj/env/bin:$PATH"
+    $(aws ecr get-login --no-include-email --region us-east-1)
     if ! test -f "./env/bin/activate"; then
         echo "#######################################################"
         echo "Creating virtual environment"

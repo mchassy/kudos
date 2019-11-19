@@ -28,14 +28,11 @@ lint_config:
 build_image:
   stage: build_image
   script:
-    - ansible-bender build  ./build/config.yml
-    - ansible-bender list-builds
-    - ansible-bender push $DOCKER_URI/kudos:test 1
+    - echo "Building stuff here"
   dependencies:
     - lint_config
 test_image:
   stage: test_image
-  image: $DOCKER_URI/gl-docker:latest
   # services:
   # - $DOCKER_URI/ab-webserver
   # tags:
@@ -43,13 +40,13 @@ test_image:
   script:
     - echo "Testing web server"
     - $(aws ecr get-login --no-include-email --region us-east-1)
-    - docker images
-    - docker run -d -i -p 3010:3000 --name test_container $DOCKER_URI/kudos:test
-    - sleep 6
-    - docker ps
-    - docker rm -f test_container
-    - docker rmi -f $DOCKER_URI/kudos:test
-    - docker ps
-    - docker images
+    # - docker images
+    # - docker run -d -i -p 3010:3000 --name test_container $DOCKER_URI/kudos:test
+    # - sleep 6
+    # - docker ps
+    # - docker rm -f test_container
+    # - docker rmi -f $DOCKER_URI/kudos:test
+    # - docker ps
+    # - docker images
   dependencies:
     - build_image
