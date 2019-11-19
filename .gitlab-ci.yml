@@ -10,6 +10,7 @@ stages:
   - lint_config
   - build_image
   - test_image
+  - push_image
 
 lint_code:
   stage: lint_code
@@ -39,8 +40,6 @@ test_image:
   stage: test_image
   # services:
   # - $DOCKER_URI/ab-webserver
-  # tags:
-  #   - docker
   script:
     - echo "Testing web server"
     - $(aws ecr get-login --no-include-email --region us-east-1)
@@ -49,8 +48,15 @@ test_image:
     - sleep 3
     - docker ps
     - docker rm -f test_container
-    - docker rmi -f $DOCKER_URI/kudos:latest
-    - docker ps
-    - docker images
   dependencies:
     - build_image
+test_image:
+  stage: push_image
+  script:
+    - echo "Pushing web server to repo"
+    - $(aws ecr get-login --no-include-email --region us-east-1)
+    - docker push $DOCKER_URI/kudos:latest
+    - echo "Remove local image"
+    - docker rmi -f $DOCKER_URI/kudos:latest
+  dependencies:
+    - test_image
