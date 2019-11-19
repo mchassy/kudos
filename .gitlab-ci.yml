@@ -50,7 +50,7 @@ test_image:
     - docker rm -f test_container
   dependencies:
     - build_image
-test_image:
+push_image:
   stage: push_image
   script:
     - echo "Pushing web server to repo"
