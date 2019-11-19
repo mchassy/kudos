@@ -28,7 +28,8 @@ lint_config:
 build_image:
   stage: build_image
   script:
-    - echo "Building stuff here"
+    - $(aws ecr get-login --no-include-email --region us-east-1)
+    - echo "Building image"
     - cd build
     - packer build config.json
     - docker images
