@@ -29,6 +29,9 @@ build_image:
   stage: build_image
   script:
     - echo "Building stuff here"
+    - cd build
+    - packer build config.json
+    - docker images
   dependencies:
     - lint_config
 test_image:
@@ -40,13 +43,13 @@ test_image:
   script:
     - echo "Testing web server"
     - $(aws ecr get-login --no-include-email --region us-east-1)
-    # - docker images
-    # - docker run -d -i -p 3010:3000 --name test_container $DOCKER_URI/kudos:test
-    # - sleep 6
-    # - docker ps
-    # - docker rm -f test_container
-    # - docker rmi -f $DOCKER_URI/kudos:test
-    # - docker ps
-    # - docker images
+    - docker images
+    - docker run -d -i --name test_container $DOCKER_URI/kudos:latest
+    - sleep 6
+    - docker ps
+    - docker rm -f test_container
+    - docker rmi -f $DOCKER_URI/kudos:latest
+    - docker ps
+    - docker images
   dependencies:
     - build_image

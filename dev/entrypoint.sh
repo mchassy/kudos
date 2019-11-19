@@ -1,6 +1,7 @@
 #!/bin/bash
 if [[ -z "${CI_JOB_STAGE}" ]]
 then
+    alias ll='ls -al'
     export FLASK_APP=/prj/app/http/api/endpoints.py
     export APP_CONFIG_FILE=/prj/config/integration.py
     export FLASK_ENV=integration

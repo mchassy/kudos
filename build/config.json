@@ -1,0 +1,34 @@
+{
+   "variables": {
+    "repo": "{{env `DOCKER_URI`}}"
+   },
+   "builders":[
+      {
+         "type":"docker",
+         "image":"{{user `repo`}}/alpine:latest",
+         "commit":true,
+         "changes":[
+            "VOLUME /kudos",
+            "WORKDIR /kudos",
+            "EXPOSE 3000",
+            "ENTRYPOINT [\"dumb-init\", \"/entrypoint.sh\"]"
+         ]
+      }
+   ],
+   "provisioners":[
+      {
+         "type":"ansible",
+         "user":"root",
+         "playbook_file":"./config.yml"
+      }
+   ],
+   "post-processors":[
+      [
+         {
+            "type":"docker-tag",
+            "repository":"{{user `repo`}}/kudos",
+            "tag":"latest"
+         }
+      ]
+   ]
+}

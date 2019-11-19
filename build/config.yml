@@ -3,21 +3,6 @@
   hosts: all
   vars:
     execution_environment: integration
-    ansible_bender:
-      base_image: "{{ lookup('env','DOCKER_URI') }}/alpine:latest"
-      working_container:
-        working_dir: /prj/kudos
-        volumes:
-          - '{{ playbook_dir }}:/src'
-
-      target_image:
-        name: kudos
-        # entrypoint: dumb-init /entrypoint.sh
-        # entrypoint: "dumb-init /entrypoint.sh"
-        entrypoint: "dumb-init /entrypoint.sh"
-        cmd: /bin/bash
-        labels:
-          built-by: '{{ ansible_user }}'
   tasks:
   - name: Install additional packages
     apk:
@@ -45,22 +30,8 @@
       requirements: /kudos/requirements.txt
   - name: create config directory
     copy: src=../config dest=/kudos mode=0775
-  - name: create app/http/api directory (with all subdirectories)
-    copy: src=../app/http/api dest=/kudos mode=0775
-  - name: create app/http/web directory (without subdirectories)
-    file: name=/kudos/app/http/web state=directory mode=0775
-  - name: create app/http/web/app directory (without subdirectories)
-    file: name=/kudos/app/http/web/app state=directory mode=0775
-  - name: create app/kudo directory
-    copy: src=../app/kudo dest=/kudos mode=0775
-  - name: create app/repository directory
-    copy: src=../app/repository dest=/kudos mode=0775
-  - name: copy over __init__.py for app
-    copy: src=../app/__init__.py dest=/kudos/app/__init__.py mode=0775
-  - name: copy over __main__.py for app
-    copy: src=../app/__main__.py dest=/kudos/app/__main__.py mode=0775
-  - name: copy over __init__.py for app/http
-    copy: src=../app/http/__init__.py dest=/kudos/app/http/__init__.py mode=0775
+  - name: create app directory (with all subdirectories)
+    copy: src=../app dest=/kudos mode=0775
   - name: copy in entrypoint.sh
     template: src=./entrypoint.sh dest=/entrypoint.sh mode=0775
 ...
