@@ -4,7 +4,7 @@ default:
   before_script:
     - echo "Gitlab Runner Stage $CI_JOB_STAGE"
   image:
-    name: $DOCKER_URI/alpine-toobox:latest
+    name: $DOCKER_URI/alpine-toolbox:latest
 stages:
   - lint_code
   - lint_config
