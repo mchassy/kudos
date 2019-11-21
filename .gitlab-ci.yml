@@ -30,10 +30,12 @@ build_image:
   stage: build_image
   script:
     - $(aws ecr get-login --no-include-email --region us-east-1)
-    - echo "Building image"
+    - echo "Build image and push to dev repo - $DOCKER_URI."
     - cd build
     - packer build config.json
     - docker images
+    - echo "Remove image from gitlab runner local repo."
+    - docker rmi $DOCKER_URI/kudos:latest
   dependencies:
     - lint_config
 test_image:
@@ -41,22 +43,24 @@ test_image:
   # services:
   # - $DOCKER_URI/ab-webserver
   script:
-    - echo "Testing web server"
+    - echo "Testing web server (also validates pull from dev repo)."
     - $(aws ecr get-login --no-include-email --region us-east-1)
+    - docker images
+    - docker pull $DOCKER_URI/kudos:latest
     - docker images
     - docker run -d -i --name test_container $DOCKER_URI/kudos:latest
     - sleep 3
     - docker ps
+    - echo "Remove Container and Image"
     - docker rm -f test_container
+    - docker rmi $DOCKER_URI/kudos:latest
   dependencies:
     - build_image
 push_image:
   stage: push_image
   script:
-    - echo "Pushing web server to repo"
     - $(aws ecr get-login --no-include-email --region us-east-1)
-    - docker push $DOCKER_URI/kudos:latest
-    - echo "Remove local image"
-    - docker rmi -f $DOCKER_URI/kudos:latest
+    - echo "Pushing web server to repo"
+    - echo "This would normall deploy the next level repo using packer push"
   dependencies:
     - test_image

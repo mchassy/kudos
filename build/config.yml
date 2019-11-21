@@ -4,34 +4,45 @@
   vars:
     execution_environment: integration
   tasks:
-  - name: Install additional packages
-    apk:
-      name: bash curl dumb-init which yarn
+  # - name: Install additional packages
+  #   apk:
+  #     name: bash curl dumb-init which yarn
   # This way of upgrading pip should cause an error on ansible-lint
   # - name: upgrade pip
   #   command: 'pip3 install --upgrade pip'
   # This way of upgrading pip should pass ansible-lint
-  - name: Install dumb init
-    get_url:
-      dest: /usr/bin/dumb-init
-      url: https://github.com/Yelp/dumb-init/releases/download/v1.0.2/dumb-init_1.0.2_amd64
-      mode: 0775
-      validate_certs: no
-  - name: install the latest version of pip
-    pip:
-      name: pip
-      extra_args: --upgrade
   - name: create /kudos directory
-    file: name=/kudos state=directory mode=0775
+    file: path=/kudos state=directory mode=0775
   - name: copy in pip requirements
     template: src=../dev/requirements.txt dest=/kudos/requirements.txt mode=0775
   - name: install pip requirments
     pip:
       requirements: /kudos/requirements.txt
   - name: create config directory
-    copy: src=../config dest=/kudos mode=0775
-  - name: create app directory (with all subdirectories)
-    copy: src=../app dest=/kudos mode=0775
+    synchronize:
+      src: ../config
+      dest: /
+      mode: push
+      # rsync_opts:
+      #     - "--exclude=level-2-1"
+  - name: create app directory
+    synchronize:
+      src: ../app
+      dest: /
+      mode: push
+      # rsync_opts:
+      #     - "--exclude=level-2-1"
+  - name: create 'll' command
+    lineinfile:
+      create: yes
+      line: "{{ item }}"
+      mode: 0775
+      owner: root
+      path: /usr/bin/ll
+      state: present
+    with_items:
+      - "#!/bin/bash"
+      - "ls -al"
   - name: copy in entrypoint.sh
     template: src=./entrypoint.sh dest=/entrypoint.sh mode=0775
 ...

@@ -1,34 +1,47 @@
 {
-   "variables": {
-    "repo": "{{env `DOCKER_URI`}}"
-   },
-   "builders":[
-      {
-         "type":"docker",
-         "image":"{{user `repo`}}/alpine:latest",
-         "commit":true,
-         "changes":[
-            "VOLUME /kudos",
-            "WORKDIR /kudos",
-            "EXPOSE 3000",
-            "ENTRYPOINT [\"dumb-init\", \"/entrypoint.sh\"]"
-         ]
-      }
-   ],
-   "provisioners":[
-      {
-         "type":"ansible",
-         "user":"root",
-         "playbook_file":"./config.yml"
-      }
-   ],
-   "post-processors":[
-      [
-         {
-            "type":"docker-tag",
-            "repository":"{{user `repo`}}/kudos",
-            "tag":"latest"
-         }
+  "variables": {
+    "repo": "{{env `DOCKER_URI`}}",
+    "ansible_host": "default",
+    "ansible_connection": "docker"
+  },
+  "builders": [
+    {
+      "type": "docker",
+      "image":"{{user `repo`}}/alpine-bare:latest",
+      "commit": "true",
+      "changes": [
+          "ENTRYPOINT [\"dumb-init\", \"/entrypoint.sh\"]"
+        ],
+      "run_command": [
+          "-d",
+          "-i",
+          "-t",
+          "--name",
+          "{{user `ansible_host`}}",
+          "{{.Image}}",
+          "/bin/bash"
       ]
-   ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "user": "root",
+      "playbook_file": "./config.yml",
+      "extra_arguments": [
+        "--extra-vars",
+        "ansible_host={{user `ansible_host`}} ansible_connection={{user `ansible_connection`}}"
+      ]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "{{user `repo`}}/kudos",
+        "tag": "latest"
+      },
+      "docker-push"
+    ]
+  ]
 }
