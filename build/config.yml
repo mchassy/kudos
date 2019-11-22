@@ -33,7 +33,8 @@
       # rsync_opts:
           # - "--exclude=node_modules"
           # - "--exclude=__pycach__"
-  - command: ls -al /app/http/web/app
+  - name: Check files
+    command: ls -al /app/http/web/app
     register: result
   - debug: msg="{{ result }}"
   - name: Update packages based on package.json to the version found in the package-lock.json
