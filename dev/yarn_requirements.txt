@@ -1,4 +1,0 @@
-yarn add core-js@3 react@ react-dom@ react-router@ && \
-yarn add create-react-app @material-ui/core @material-ui/icons react-router-dom && \
-yarn add @okta/okta-react axios && \
-yarn add react-swipeable-views
