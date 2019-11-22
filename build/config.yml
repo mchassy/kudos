@@ -42,6 +42,14 @@
       path: /app/http/web/app
       state: present
       ci: yes
+  - name: Check files after npm install
+    command: ls -al /app/http/web/app
+    register: result
+  - debug: msg="{{ result }}"
+  - name: Check node_modules files after npm install
+    command: ls -al /app/http/web/app/node_modules
+    register: result
+  - debug: msg="{{ result }}"
   - name: create 'll' command
     lineinfile:
       create: yes
