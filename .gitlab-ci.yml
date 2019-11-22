@@ -23,16 +23,13 @@ lint_code:
 lint_config:
   stage: lint_config
   script:
-    - echo "SKIPPING THIS FOR NOW" 
-    # - ansible-lint ./build/config.yml
+    - ansible-lint ./build/config.yml
   dependencies:
     - lint_code
 build_image:
   stage: build_image
   script:
     - $(aws ecr get-login --no-include-email --region us-east-1)
-    - echo "Checking to see if node_modules brought up or not"
-    - ls -al app/http/web/app
     - echo "Build image and push to dev repo - $DOCKER_URI."
     - cd build
     - packer build config.json
