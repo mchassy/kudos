@@ -30,9 +30,14 @@
       src: ../app
       dest: /
       mode: push
-      rsync_opts:
-          - "--exclude=__pycacheßß__"
+      # rsync_opts:
+      #     - "--exclude=__pycacheßß__"
           # - "--exclude=__pycach__"
+  - name: Update packages based on package.json to the version found in the package-lock.json
+    npm:
+      path: /app/http/web/app
+      state: present
+      ci: yes
   - name: create 'll' command
     lineinfile:
       create: yes
