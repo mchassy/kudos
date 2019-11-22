@@ -49,7 +49,7 @@ test_image:
     - docker pull $DOCKER_URI/kudos:latest
     - docker images
     - docker run -d -i --name test_container $DOCKER_URI/kudos:latest
-    - sleep 3
+    - sleep 30
     - docker ps
     - echo "Remove Container and Image"
     - docker rm -f test_container

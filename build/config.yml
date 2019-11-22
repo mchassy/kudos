@@ -30,8 +30,9 @@
       src: ../app
       dest: /
       mode: push
-      # rsync_opts:
-      #     - "--exclude=level-2-1"
+      rsync_opts:
+          - "--exclude=__pycacheßß__"
+          # - "--exclude=__pycach__"
   - name: create 'll' command
     lineinfile:
       create: yes
