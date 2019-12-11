@@ -2,8 +2,8 @@ variables:
   DOCKER_DRIVER: overlay
 default:
   before_script:
-    - echo "Gitlab Runner Stage $CI_JOB_STAGE"
     - $(aws ecr get-login --no-include-email --region us-east-1)
+    - echo "Gitlab Runner Stage $CI_JOB_STAGE"
   image:
     name: $DOCKER_URI/alpine-toolbox:latest
 stages:
@@ -16,6 +16,7 @@ stages:
 lint_code:
   stage: lint_code
   script:
+    - $(aws ecr get-login --no-include-email --region us-east-1)
     - python3 -m venv env
     - source ./env/bin/activate
     - pip3 install -r ./dev/requirements.txt
@@ -24,6 +25,7 @@ lint_code:
 lint_config:
   stage: lint_config
   script:
+    - $(aws ecr get-login --no-include-email --region us-east-1)
     - ansible-lint ./build/config.yml
   dependencies:
     - lint_code
