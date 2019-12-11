@@ -46,8 +46,8 @@ test_image:
   # services:
   # - $DOCKER_URI/ab-webserver
   script:
-    - echo "Testing web server (also validates pull from dev repo)."
     - $(aws ecr get-login --no-include-email --region us-east-1)
+    - echo "Testing web server (also validates pull from dev repo)."
     - docker images
     - docker pull $DOCKER_URI/kudos:latest
     - docker images
