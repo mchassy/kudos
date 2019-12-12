@@ -38,17 +38,19 @@ build_image:
     - echo "Current Value of IMAGE_SIG is $IMAGE_SIG"
     - $(aws ecr get-login --no-include-email --region us-east-1)
     - cd build
-    - packer build --machine-readable config.json > r1.txt
-    - cat r1.txt | awk -F ',' /"docker: Imported Docker image: sha"/'{print $0}' > r2.txt
-    - cat r2.txt | awk -F ':' /image/'{print $3":"$4}' > r3.txt
-    - IMAGE_SIG=$(cat r3.txt)
+    - packer build -machine-readable config.json > r1.txt
+    - cat r1.txt
+    - cat r1.txt | awk -F ',' -v pattern='docker':' Imported Docker image':' sha' '$0~pattern{print $0}' > r2.txt
+    - cat r2.txt
+    - cat r2.txt | awk -F ':' /image/'{print $3':'$4}' > r3.txt
+    - cat r3.txt
     - echo "New Value of IMAGE_SIG is $IMAGE_SIG"
     - docker images
     - echo "Remove image from gitlab runner local repo."
     - docker rmi $DOCKER_URI/kudos:latest
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Build Success Notification"
       --message "$DOCKER_URI image was successfully built in confrormance with enterprise standards. \n
-      Signature - $IMAGE_SIG"
+      Signature - $(cat r3.txt)"
   dependencies:
     - lint_config
 test_image:
