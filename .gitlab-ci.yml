@@ -59,10 +59,10 @@ test_image:
     - docker run -d -i --name test_container $DOCKER_URI/kudos:latest
     - sleep 3
     - docker ps
-    - IMAGE_SIG=$(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}')
+    - TEST_SIG=$(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}')
     - echo "Image signature -- $IMAGE_SIG"
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Service Validation Success Notification"
-      --message "Container $DOCKER_URI has passed all tests will be pushed to the Integration Repo \n
+      --message "Container $DOCKER_URI has passed all tests will be pushed to the Integration Repo
       Signature - $IMAGE_SIG"
     - echo "Remove Container and Image"
     - docker rm -f test_container
@@ -72,8 +72,18 @@ test_image:
 push_image:
   stage: push_image
   script:
-    - $(aws ecr get-login --no-include-email --region us-east-1)
-    - echo "Pushing web server to repo"
-    - echo "This would normall deploy the next level repo using packer push"
+    - if [[ "$IMAGE_SIG" == "$TEST_SIG" ]]; then
+      aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Signature Validation Notification"
+      --message "The signature of the image created by the factory matches the signature of the image which
+      was just tested (factory image signature $IMAGE_SIG == test image signature $TEST_SIG).
+      This container will be pushed to the integration repo and is ready to deploy.";
+      echo "Pushing web server to repo";
+      else
+      aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "FAILURE!!! -- Image Signature Validation Notification"
+      --message "The signature of the image created by the factory does not the signature of the image which
+      was just tested (factory image signature $IMAGE_SIG != test image signature $TEST_SIG).
+      This container will not be pushed to the integration.";
+      echo "Error matching signatures"; 
+      fi
   dependencies:
     - test_image
