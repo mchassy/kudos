@@ -56,7 +56,8 @@ test_image:
     - docker ps
     - echo "Remove Container and Image"
     - docker rm -f test_container
-    - docker images | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}'
+    - echo "Container $DOCKER_URI has passed all tests will be pushed to the Integration Repo"
+    - echo "signature - $(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}')"
     - docker rmi $DOCKER_URI/kudos:latest
   dependencies:
     - build_image
