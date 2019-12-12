@@ -30,9 +30,9 @@
       src: ../app
       dest: /
       mode: push
-      # rsync_opts:
-          # - "--exclude=node_modules"
-          # - "--exclude=__pycach__"
+      rsync_opts:
+          - "--exclude=node_modules"
+          - "--exclude=__pycache__"
   - name: Update packages based on package.json to the version found in the package-lock.json
     npm:
       path: /app/http/web/app

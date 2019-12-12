@@ -16,6 +16,7 @@ stages:
 lint_code:
   stage: lint_code
   script:
+    - echo "Linting python code"
     - $(aws ecr get-login --no-include-email --region us-east-1)
     - python3 -m venv env
     - source ./env/bin/activate
@@ -25,6 +26,7 @@ lint_code:
 lint_config:
   stage: lint_config
   script:
+    - echo "Linting ansible configuration"
     - $(aws ecr get-login --no-include-email --region us-east-1)
     - ansible-lint ./build/config.yml
   dependencies:
@@ -32,13 +34,21 @@ lint_config:
 build_image:
   stage: build_image
   script:
-    - $(aws ecr get-login --no-include-email --region us-east-1)
     - echo "Build image and push to dev repo - $DOCKER_URI."
+    - echo "Current Value of IMAGE_SIG is $IMAGE_SIG"
+    - $(aws ecr get-login --no-include-email --region us-east-1)
     - cd build
-    - packer build config.json
+    - packer build --machine-readable config.json > r1.txt
+    - cat r1.txt | awk -F ',' /"docker: Imported Docker image: sha"/'{print $0}' > r2.txt
+    - cat r2.txt | awk -F ':' /image/'{print $3":"$4}' > r3.txt
+    - IMAGE_SIG=$(cat r3.txt)
+    - echo "New Value of IMAGE_SIG is $IMAGE_SIG"
     - docker images
     - echo "Remove image from gitlab runner local repo."
     - docker rmi $DOCKER_URI/kudos:latest
+    - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Build Success Notification"
+      --message "$DOCKER_URI image was successfully built in confrormance with enterprise standards. \n
+      Signature - $IMAGE_SIG"
   dependencies:
     - lint_config
 test_image:
@@ -56,9 +66,9 @@ test_image:
     - docker ps
     - echo "Remove Container and Image"
     - docker rm -f test_container
-    - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Pipeline Notification"
-      --message "Container $DOCKER_URI has passed all tests will be pushed to the Integration Repo
-      with signature - $(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}')"
+    - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Service Validation Success Notification"
+      --message "Container $DOCKER_URI has passed all tests will be pushed to the Integration Repo \n
+      Signature - $(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}')"
     - docker rmi $DOCKER_URI/kudos:latest
   dependencies:
     - build_image
