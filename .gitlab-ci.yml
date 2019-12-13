@@ -47,6 +47,7 @@ build_image:
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Build Success Notification"
       --message "$DOCKER_URI image was successfully built in confrormance with enterprise standards.
       Signature - $BUILD_SIG"
+    - cat $VARIABLES_FILE
   dependencies:
     - lint_config
 test_image:
@@ -68,11 +69,13 @@ test_image:
     - echo "Remove Container and Image"
     - docker rm -f test_container
     - docker rmi $DOCKER_URI/kudos:latest
+    - cat $VARIABLES_FILE
   dependencies:
     - build_image
 push_image:
   stage: push_image
   script:
+    - cat $VARIABLES_FILE
     - source $VARIABLES_FILE
     - echo $IMAGE_SIG
     - echo $TEST_SIG
