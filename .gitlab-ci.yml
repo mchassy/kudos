@@ -72,6 +72,8 @@ test_image:
 push_image:
   stage: push_image
   script:
+    - cat image.sig
+    - cat test.sig
     - if [[ "$(cat image.sig)" == "$(cat test.sig)" ]]; then
       aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Signature Validation Notification"
       --message "The signature of the image created by the factory matches the signature of the image which
