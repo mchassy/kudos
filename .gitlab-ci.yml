@@ -59,7 +59,7 @@ test_image:
     - docker run -d -i --name test_container $DOCKER_URI/kudos:latest
     - sleep 3
     - docker ps
-    - $(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}') > test.sig
+    - echo $(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}') > test.sig
     - cat test.sig
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Service Validation Success Notification"
       --message "Container $DOCKER_URI has passed all tests will be pushed to the Integration Repo
