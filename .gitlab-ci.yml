@@ -1,5 +1,6 @@
 variables:
   DOCKER_DRIVER: overlay
+  VARIABLES_FILE: ./variables.txt
 default:
   before_script:
     - $(aws ecr get-login --no-include-email --region us-east-1)
@@ -40,12 +41,12 @@ build_image:
     - packer build -machine-readable config.json > r1.txt
     - cat r1.txt | awk -F ',' -v pattern='docker':' Imported Docker image':' sha' '$0~pattern{print $0}' > r2.txt
     - cat r2.txt | awk -F ':' /image/'{print $3":"$4}' > r3.txt
-    - echo "$(cat r3.txt | awk '{print $NF}')" > build.sig
-    - cat build.sig
+    - BUILD_SIG=$(cat r3.txt | awk '{print $NF}')
+    - echo "export BUILD_SIG=$BUILD_SIG > $VARIABLES_FILE"
     - docker rmi $DOCKER_URI/kudos:latest
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Build Success Notification"
       --message "$DOCKER_URI image was successfully built in confrormance with enterprise standards.
-      Signature - $(cat build.sig)"
+      Signature - $BUILD_SIG"
   dependencies:
     - lint_config
 test_image:
@@ -59,11 +60,11 @@ test_image:
     - docker run -d -i --name test_container $DOCKER_URI/kudos:latest
     - sleep 3
     - docker ps
-    - echo $(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}') > test.sig
-    - cat test.sig
+    - TEST_SIG=$(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}')
+    - echo "export TEST_SIG=$TEST_SIG > $VARIABLES_FILE"
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Service Validation Success Notification"
       --message "Container $DOCKER_URI has passed all tests will be pushed to the Integration Repo
-      Signature - $(cat test.sig)"
+      Signature - $TEST_SIG"
     - echo "Remove Container and Image"
     - docker rm -f test_container
     - docker rmi $DOCKER_URI/kudos:latest
@@ -72,18 +73,19 @@ test_image:
 push_image:
   stage: push_image
   script:
-    - cat image.sig
-    - cat test.sig
-    - if [[ "$(cat image.sig)" == "$(cat test.sig)" ]]; then
+    - source $VARIABLES_FILE
+    - echo $IMAGE_SIG
+    - echo $TEST_SIG
+    - if [[ "$IMAGE_SIG" == "$TEST_SIG" ]]; then
       aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Signature Validation Notification"
       --message "The signature of the image created by the factory matches the signature of the image which
-      was just tested (factory image signature $(cat image.sig) == test image signature $(cat test.sig)).
+      was just tested (factory image signature $IMAGE_SIG == test image signature $TEST_SIG).
       This container will be pushed to the integration repo and is ready to deploy.";
       echo "Pushing web server to repo";
       else
       aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "FAILURE!!! -- Image Signature Validation Notification"
       --message "The signature of the image created by the factory does not the signature of the image which
-      was just tested (factory image signature  $(cat image.sig) != test image signature $(cat test.sig)).
+      was just tested (factory image signature  $IMAGE_SIG != test image signature $TEST_SIG).
       This container will not be pushed to the integration.";
       echo "Error matching signatures";
       fi
