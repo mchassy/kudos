@@ -42,6 +42,7 @@ build_image:
     - cat r2.txt | awk -F ':' /image/'{print $3":"$4}' > r3.txt
     - BUILD_SIG=$(cat r3.txt | awk '{print $NF}')
     - echo "$BUILD_SIG" > BUILD_SIG
+    - echo "BUILD_SIG is $BUILD_SIG"
     - aws s3 cp ./BUILD_SIG s3://mapu-signatures/kudos/BUILD_SIG
     - docker rmi $DOCKER_URI/kudos:latest
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Build Success Notification"
@@ -62,6 +63,7 @@ test_image:
     - docker ps
     - TEST_SIG=$(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}')
     - echo "$TEST_SIG" > TEST_SIG
+    - echo "TEST_SIG is $TEST_SIG"
     - aws s3 cp ./TEST_SIG s3://mapu-signatures/kudos/TEST_SIG
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Service Validation Success Notification"
       --message "Container $DOCKER_URI has passed all tests will be pushed to the Integration Repo
@@ -79,6 +81,8 @@ push_image:
     - aws s3 cp s3://mapu-signatures/kudos/TEST_SIG .
     - BUILD_SIG=$(cat BUILD_SIG)
     - TEST_SIG=$(cat TEST_SIG)
+    - echo "BUILD_SIG is $BUILD_SIG"
+    - echo "TEST_SIG is $TEST_SIG"
     - if [[ "$IMAGE_SIG" == "$TEST_SIG" ]]; then
       aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Signature Validation Notification"
       --message "The signature of the image created by the factory matches the signature of the image which
@@ -92,7 +96,5 @@ push_image:
       This container will not be pushed to the integration.";
       echo "Error matching signatures";
       fi
-    - aws s3 rm s3://mapu-signatures/kudos/BUILD_SIG
-    - aws s3 rm s3://mapu-signatures/kudos/TEST_SIG
   dependencies:
     - test_image
