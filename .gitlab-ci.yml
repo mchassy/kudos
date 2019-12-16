@@ -43,7 +43,7 @@ build_image:
     - cat r2.txt | awk -F ':' /image/'{print $3":"$4}' > r3.txt
     - BUILD_SIG=$(cat r3.txt | awk '{print $NF}')
     - cd ..
-    - echo "export BUILD_SIG=$BUILD_SIG > $VARIABLES_FILE"
+    - echo "export BUILD_SIG=$BUILD_SIG" >> $VARIABLES_FILE
     - docker rmi $DOCKER_URI/kudos:latest
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Build Success Notification"
       --message "$DOCKER_URI image was successfully built in confrormance with enterprise standards.
@@ -63,7 +63,7 @@ test_image:
     - sleep 3
     - docker ps
     - TEST_SIG=$(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}')
-    - echo "export TEST_SIG=$TEST_SIG > $VARIABLES_FILE"
+    - echo "export TEST_SIG=$TEST_SIG" >> $VARIABLES_FILE
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Service Validation Success Notification"
       --message "Container $DOCKER_URI has passed all tests will be pushed to the Integration Repo
       Signature - $TEST_SIG"
