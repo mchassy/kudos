@@ -83,16 +83,16 @@ push_image:
     - TEST_SIG=$(cat TEST_SIG)
     - echo "BUILD_SIG is $BUILD_SIG"
     - echo "TEST_SIG is $TEST_SIG"
-    - if [[ "$IMAGE_SIG" == "$TEST_SIG" ]]; then
+    - if [[ "$BUILD_SIG" == "$TEST_SIG" ]]; then
       aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Signature Validation Notification"
       --message "The signature of the image created by the factory matches the signature of the image which
-      was just tested (factory image signature $IMAGE_SIG == test image signature $TEST_SIG).
+      was just tested (factory image signature $BUILD_SIG == test image signature $TEST_SIG).
       This container will be pushed to the integration repo and is ready to deploy.";
       echo "Pushing web server to repo";
       else
       aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "FAILURE!!! -- Image Signature Validation Notification"
       --message "The signature of the image created by the factory does not the signature of the image which
-      was just tested (factory image signature  $IMAGE_SIG != test image signature $TEST_SIG).
+      was just tested (factory image signature  $BUILD_SIG != test image signature $TEST_SIG).
       This container will not be pushed to the integration.";
       echo "Error matching signatures";
       fi
