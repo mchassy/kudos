@@ -1,6 +1,5 @@
 variables:
   DOCKER_DRIVER: overlay
-  VARIABLES_FILE: ./variables.txt
 default:
   before_script:
     - $(aws ecr get-login --no-include-email --region us-east-1)
@@ -42,13 +41,12 @@ build_image:
     - cat r1.txt | awk -F ',' -v pattern='docker':' Imported Docker image':' sha' '$0~pattern{print $0}' > r2.txt
     - cat r2.txt | awk -F ':' /image/'{print $3":"$4}' > r3.txt
     - BUILD_SIG=$(cat r3.txt | awk '{print $NF}')
-    - cd ..
-    - echo "export BUILD_SIG=$BUILD_SIG" >> $VARIABLES_FILE
+    - echo "$BUILD_SIG" > BUILD_SIG
+    - aws s3 cp ./BUILD_SIG s3://mapu-signatures/kudos/BUILD_SIG
     - docker rmi $DOCKER_URI/kudos:latest
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Build Success Notification"
       --message "$DOCKER_URI image was successfully built in confrormance with enterprise standards.
       Signature - $BUILD_SIG"
-    - cat $VARIABLES_FILE
   dependencies:
     - lint_config
 test_image:
@@ -63,7 +61,8 @@ test_image:
     - sleep 3
     - docker ps
     - TEST_SIG=$(docker images --no-trunc | awk -v du="$DOCKER_URI\/kudos" '$0~du{print $3}')
-    - echo "export TEST_SIG=$TEST_SIG" >> $VARIABLES_FILE
+    - echo "$TEST_SIG" > TEST_SIG
+    - aws s3 cp ./TEST_SIG s3://mapu-signatures/kudos/TEST_SIG
     - aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Service Validation Success Notification"
       --message "Container $DOCKER_URI has passed all tests will be pushed to the Integration Repo
       Signature - $TEST_SIG"
@@ -76,10 +75,10 @@ test_image:
 push_image:
   stage: push_image
   script:
-    - cat $VARIABLES_FILE
-    - source $VARIABLES_FILE
-    - echo $IMAGE_SIG
-    - echo $TEST_SIG
+    - aws s3 cp s3://mapu-signatures/kudos/BUILD_SIG .
+    - aws s3 cp s3://mapu-signatures/kudos/TEST_SIG .
+    - BUILD_SIG=$(cat BUILD_SIG)
+    - TEST_SIG=$(cat TEST_SIG)
     - if [[ "$IMAGE_SIG" == "$TEST_SIG" ]]; then
       aws sns publish --region us-east-1 --topic-arn "$PL_ARN" --subject "Image Signature Validation Notification"
       --message "The signature of the image created by the factory matches the signature of the image which
@@ -93,5 +92,7 @@ push_image:
       This container will not be pushed to the integration.";
       echo "Error matching signatures";
       fi
+    - aws s3 rm s3://mapu-signatures/kudos/BUILD_SIG
+    - aws s3 rm s3://mapu-signatures/kudos/TEST_SIG
   dependencies:
     - test_image
